@@ -38,9 +38,11 @@ export function GFooter() {
                         <div>
                             <Footer.Title title="Help Center"/>
                             <Footer.LinkGroup col>
-                                <Footer.Link href="#">Github</Footer.Link>
+                                <Footer.Link href={process.env.NEXT_GITHUB_URL || '#'}
+                                             target={"_blank"}
+                                >Github</Footer.Link>
                                 <Footer.Link  href={process.env.NEXT_X_URL || '#'}
-                                              target={"_blank"}>Twitter</Footer.Link>
+                                              >Twitter</Footer.Link>
                                 <Footer.Link href={process.env.NEXT_DISCORD_URL || '#'}
                                              target={"_blank"}>Discord</Footer.Link>
                             </Footer.LinkGroup>
