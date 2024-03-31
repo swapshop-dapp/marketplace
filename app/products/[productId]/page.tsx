@@ -22,7 +22,7 @@ export default function ProductDetail() {
                             <span className="text-3xl font-bold text-gray-900 dark:text-white">599 </span>
                             <span className={'self-center align-middle text-xl'}>($599)</span>
                         </div>
-                        <Button className={'w-1/5 text-center align-middle self-end'}>Place An Order</Button>
+                        <Button className={'w-1/5 self-end text-center align-middle'}>Place An Order</Button>
                     </div>
                     <div className={'flex md:mt-4 '}>
                         <div className={'grid grid-cols-2 gap-4'}>
