@@ -1,11 +1,12 @@
-import { Footer } from "flowbite-react";
+import { Footer }   from "flowbite-react";
 import {
-    BsDribbble,
+    BsDiscord,
     BsFacebook,
     BsGithub,
     BsInstagram,
     BsTwitter
-}                 from "react-icons/bs";
+} from "react-icons/bs";
+import * as process from 'node:process';
 
 export function GFooter() {
     return (
@@ -15,7 +16,7 @@ export function GFooter() {
                 <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">
                     <div className={'md:ml-20'}>
                         <Footer.Brand
-                            href="https://flowbite.com"
+                            href="https://marketplace.goswapshop.com"
                             src="https://static.goswapshop.com/logo_xl.svg"
                             width={'300px'}
                             height={'400px'}
@@ -38,8 +39,10 @@ export function GFooter() {
                             <Footer.Title title="Help Center"/>
                             <Footer.LinkGroup col>
                                 <Footer.Link href="#">Github</Footer.Link>
-                                <Footer.Link href="#">Twitter</Footer.Link>
-                                <Footer.Link href="#">Discord</Footer.Link>
+                                <Footer.Link  href={process.env.NEXT_X_URL || '#'}
+                                              target={"_blank"}>Twitter</Footer.Link>
+                                <Footer.Link href={process.env.NEXT_DISCORD_URL || '#'}
+                                             target={"_blank"}>Discord</Footer.Link>
                             </Footer.LinkGroup>
                         </div>
                         <div>
@@ -58,10 +61,20 @@ export function GFooter() {
                         <Footer.Copyright href="#" by="GoSwapShop™" year={2024}/>
                     </div>
                     <div className="flex space-x-6 sm:mt-0 sm:justify-center md:mt-4">
-                        <Footer.Icon href="#" icon={BsFacebook}/>
-                        <Footer.Icon href="#" icon={BsInstagram}/>
-                        <Footer.Icon href="#" icon={BsTwitter}/>
-                        <Footer.Icon href="#" icon={BsGithub}/>
+                        {/*<Footer.Icon href={process.env.NEXT_FB_URL || process.env.NEXT_PUBLIC_SITE_URL}*/}
+                        {/*             icon={BsFacebook}*/}
+                        {/*             target={"_blank"}/>*/}
+                        <Footer.Icon href={process.env.NEXT_DISCORD_URL || '#'}
+                                     icon={BsDiscord}
+                                     target={"_blank"}/>
+                        <Footer.Icon
+                            href={process.env.NEXT_X_URL || '#'}
+                            icon={BsTwitter}
+                            target={"_blank"}/>
+                        <Footer.Icon
+                            href={process.env.NEXT_GITHUB_URL || '#'}
+                            icon={BsGithub}
+                            target={"_blank"}/>
                     </div>
                 </div>
             </div>

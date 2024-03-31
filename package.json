@@ -1,7 +1,13 @@
 {
-  "name": "flowbite-react-template-nextjs",
+  "name": "@goswapshop/marketplace",
   "version": "0.1.0",
   "private": true,
+  "author": {
+    "email": "phamanhtan@proton.me",
+    "name": "Pham Anh Tan",
+    "url": "https://github.com/ngankilo"
+  },
+  "description": "Marketplace for GoSwapShop",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
