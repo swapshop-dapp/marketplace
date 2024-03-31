@@ -2,7 +2,8 @@ import { CustomFlowbiteTheme } from 'flowbite-react';
 
 export const themes: CustomFlowbiteTheme = {
     button: {
-        base: 'btn-goswapshop-bg'
+        base: 'btn-goswapshop-bg',
+        "label": "ml-2 inline-flex h-4 w-4 items-center justify-center rounded-full bg-cyan-200 text-xs font-semibold text-cyan-800",
     },
     navbar: {
         "root": {

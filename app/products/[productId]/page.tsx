@@ -1,5 +1,8 @@
 import { GCarousel } from '@app/components/Carousel';
-import { Avatar }    from 'flowbite-react';
+import {
+    Avatar,
+    Button
+}                    from 'flowbite-react';
 import { GRating }   from '@app/components/GRating';
 import { FaSafari }  from 'react-icons/fa6';
 
@@ -9,42 +12,42 @@ export default function ProductDetail() {
             <div className={'grid grid-cols-2 gap-10'}>
                 <GCarousel></GCarousel>
                 <div className={'text-4xl text-white'}>
+                    
                     <h5 className="text-lg font-semibold tracking-tight text-gray-900 dark:text-white">
                         Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport
                     </h5>
-                    <div className="flex items-center">
+                    <div className="flex items-center justify-start md:gap-4">
                         <div className={'flex gap-1'}>
                             <img src="https://static.goswapshop.com/assets/usdt.svg" alt="" width={24}/>
                             <span className="text-3xl font-bold text-gray-900 dark:text-white">599 </span>
                             <span className={'self-center align-middle text-xl'}>($599)</span>
                         </div>
+                        <Button className={'w-1/5 text-center align-middle self-end'}>Place An Order</Button>
                     </div>
-                    <div className={'md:mt-4'}>
-                        <div className="mb-2 mt-0.5 flex items-center justify-between">
-                            <div className={'grid grid-cols-2 gap-4'}>
-                                <Avatar img="https://static.goswapshop.com/images/people/profile-picture-5.jpg" rounded
-                                        bordered
-                                        status="online" statusPosition="bottom-right">
-                                    <div className="space-y-1 font-medium dark:text-white">
-                                        <div className={'text-xl'}>Yang</div>
-                                    </div>
-                                    <div className={'grid grid-cols-2 justify-between gap-2'}>
-                                        <GRating></GRating>
-                                        <span className="text-sm text-gray-600 dark:text-gray-400">(91 reviews)</span>
-                                    </div>
-                                </Avatar>
-                                <div className={'items-end justify-end'}>
-                                    <div className={'gap-1'}>
+                    <div className={'flex md:mt-4 '}>
+                        <div className={'grid grid-cols-2 gap-4'}>
+                            <Avatar img="https://static.goswapshop.com/images/people/profile-picture-5.jpg" rounded
+                                    bordered
+                                    status="online" statusPosition="bottom-right">
+                                <div className="space-y-1 font-medium dark:text-white">
+                                    <div className={'text-xl'}>Yang</div>
+                                </div>
+                                <div className={'grid grid-cols-2 justify-between gap-2'}>
+                                    <GRating></GRating>
+                                    <span className="text-sm text-gray-600 dark:text-gray-400">(91 reviews)</span>
+                                </div>
+                            </Avatar>
+                            <div className={'items-end justify-end'}>
+                                <div className={'gap-1'}>
                                         <span
                                             className="items-end justify-end align-middle text-sm text-gray-600 dark:text-gray-400">12 hours ago</span>
+                                </div>
+                                <div className={'flex items-center justify-around gap-1 align-middle text-white'}>
+                                    <div className={'flex items-center gap-1 align-middle'}>
+                                        <FaSafari size={16}/>
+                                        <span className={'text-lg'}>Long Bien, Hanoi</span>
                                     </div>
-                                    <div className={'flex items-center justify-around gap-1 align-middle text-white'}>
-                                        <div className={'flex items-center gap-1 align-middle'}>
-                                            <FaSafari size={16}/>
-                                            <span className={'text-lg'}>Long Bien, Hanoi</span>
-                                        </div>
-                                        <span className={'text-sm'}>about 4km from you</span>
-                                    </div>
+                                    <span className={'text-sm'}>about 4km from you</span>
                                 </div>
                             </div>
                             {/*<div>*/}
