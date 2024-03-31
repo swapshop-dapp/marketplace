@@ -50,7 +50,7 @@ export const ProductItem = () => {
             </h5>
             <div className="flex items-center">
                 <div className={'flex gap-1'}>
-                    <img src="https://static.goswapshop.com/assets/usdt.svg" alt="" width={24}/>
+                    <img src="https://static.goswapshop.com/assets/usdc.svg" alt="" width={24}/>
                     <span className="text-3xl font-bold text-gray-900 dark:text-white">599</span>
                 </div>
                 <div className={'items-end self-end align-bottom dark:text-white'}>
