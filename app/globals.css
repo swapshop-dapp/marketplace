@@ -6,7 +6,7 @@ body {
     background-color: rgb(31 41 55);
 }
 
-.btn-goswapshop-bg {
+.btn-goswapshop-bg:not(.btn-goswapshop-bg-secondary)  {
     border-radius: 10px;
     background: linear-gradient(90deg, #FA7EC4 0%, #7E8BFE 50%, #59C3DC 100%);
 }

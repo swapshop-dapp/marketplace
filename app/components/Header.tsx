@@ -1,17 +1,22 @@
 "use client";
 
 import {
-    Button,
-    Navbar,
-    Tooltip
+  Navbar,
+  Tooltip
 } from "flowbite-react";
+import Image from "next/image";
 import { ComponentProps } from 'react';
+import { ToggleWalletModalBtn } from "./WalletModal";
 
 export const Header: React.FC<ComponentProps<any>> = ({children}) => {
     return (
         <Navbar fluid rounded className={''}>
             <Navbar.Brand href="/" className={'justify-center'}>
-                <img src="https://static.goswapshop.com/logo.svg" className="mr-3 h-6 sm:h-9"
+                <Image
+                  loading="lazy"
+                  width={100}
+                  height={40}
+                 src="https://static.goswapshop.com/logo.svg" className="mr-3 h-6 sm:h-9"
                      alt="Flowbite React Logo"/>
             </Navbar.Brand>
             <div className="flex md:order-2">
@@ -27,7 +32,8 @@ export const Header: React.FC<ComponentProps<any>> = ({children}) => {
                             <Navbar.Link href="/" className={'text-lg'} disabled={true}>Nearby</Navbar.Link>
                         </Tooltip>
                     </div>
-                    <Button className={"mr-32 md:absolute md:right-1"}>Connect Wallet</Button>
+
+            <ToggleWalletModalBtn className={"mr-32 md:absolute md:right-1"} title="Connect Wallet" />
                 </div>
             </Navbar.Collapse>
         </Navbar>
