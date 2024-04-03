@@ -17,6 +17,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@solana/wallet-adapter-base": "^0.9.23",
+    "@solana/wallet-adapter-react": "^0.15.35",
+    "@solana/wallet-adapter-react-ui": "^0.9.35",
+    "@solana/wallet-adapter-wallets": "^0.19.32",
+    "@solana/web3.js": "^1.91.3",
     "classnames": "^2.5.1",
     "flowbite-react": "^0.7.5",
     "google-map-react": "^2.2.1",

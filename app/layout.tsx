@@ -1,14 +1,17 @@
-import type { Metadata } from "next";
-import { Inter }         from "next/font/google";
+import { GFooter } from '@app/components/Footer';
+import { Header } from '@app/components/Header';
+import { Navigator } from '@app/components/Navigator';
+import { themes } from '@app/themes';
 import {
-    Flowbite,
-    ThemeModeScript
-}                        from "flowbite-react";
+  Flowbite,
+  ThemeModeScript
+} from "flowbite-react";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { SolanaWalletContext } from './components/SolanaWalletContext';
+import { WalletModal } from './components/WalletModal';
+import { WalletModalProvider } from './context/walletContext';
 import "./globals.css";
-import { Header }        from '@app/components/Header';
-import { themes }        from '@app/themes';
-import { GFooter }       from '@app/components/Footer';
-import { Navigator }     from '@app/components/Navigator';
 
 const inter = Inter({subsets: [ "latin" ]});
 
@@ -28,13 +31,18 @@ export default function RootLayout({
             <ThemeModeScript/>
         </head>
         <body className={'w-screen p-1 md:px-32'}>
-        <Flowbite theme={{mode: 'dark', theme: themes}}>
-            <Header>
-                <Navigator></Navigator>
-            </Header>
-            {children}
-            <GFooter></GFooter>
-        </Flowbite>
+          <WalletModalProvider>
+            <SolanaWalletContext>
+              <Flowbite theme={{mode: 'dark', theme: themes}}>
+                  <WalletModal />
+                  <Header>
+                      <Navigator></Navigator>
+                  </Header>
+                  {children}
+                  <GFooter></GFooter>
+              </Flowbite>
+            </SolanaWalletContext>
+          </WalletModalProvider>
         </body>
         </html>
     );
