@@ -7,13 +7,13 @@ import {
   ThemeModeScript
 } from "flowbite-react";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { SolanaWalletContext } from './components/SolanaWalletContext';
+import { WagmiConfig } from 'wagmi';
+import { EVMWalletModal } from './components/EVMWalletModal';
 import { WalletModal } from './components/WalletModal';
+import { wagmiConfig } from './consts/wagmiConfig';
+import { SolanaWalletContext } from './context/SolanaWalletContext';
 import { WalletModalProvider } from './context/walletContext';
 import "./globals.css";
-
-const inter = Inter({subsets: [ "latin" ]});
 
 export const metadata: Metadata = {
     title: "GoSwapShop",
@@ -32,16 +32,19 @@ export default function RootLayout({
         </head>
         <body className={'w-screen p-1 md:px-32'}>
           <WalletModalProvider>
-            <SolanaWalletContext>
-              <Flowbite theme={{mode: 'dark', theme: themes}}>
-                  <WalletModal />
-                  <Header>
-                      <Navigator></Navigator>
-                  </Header>
-                  {children}
-                  <GFooter></GFooter>
-              </Flowbite>
-            </SolanaWalletContext>
+            <WagmiConfig config={wagmiConfig}>
+              <SolanaWalletContext>
+                <Flowbite theme={{mode: 'dark', theme: themes}}>
+                    <WalletModal />
+                    <Header>
+                        <Navigator></Navigator>
+                    </Header>
+                    {children}
+                    <GFooter></GFooter>
+                </Flowbite>
+              </SolanaWalletContext>
+            </WagmiConfig>
+            <EVMWalletModal />
           </WalletModalProvider>
         </body>
         </html>
