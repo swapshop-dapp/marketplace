@@ -3,8 +3,8 @@
 import { WalletName, WalletReadyState } from "@solana/wallet-adapter-base";
 import { Wallet, useWallet } from "@solana/wallet-adapter-react";
 import { List } from "flowbite-react";
-import Image from "next/image";
 import { useCallback, useMemo } from "react";
+import { WalletListItem } from "./WalletListItem";
 
 
 const DetectedWalletListItem = ({
@@ -23,25 +23,8 @@ const DetectedWalletListItem = ({
 
   return (
     <List.Item onClick={handleWalletClick} className="cursor-pointer">
-      <WalletListItem wallet={wallet} text={wallet.adapter.name} />
+      <WalletListItem icon={wallet?.adapter?.icon} name={wallet?.adapter?.name} />
     </List.Item>
-  );
-};
-
-const WalletListItem = ({ wallet, text }: { wallet: Wallet; text: string }) => {
-  return (
-    <div className="flex flex-wrap items-center gap-3">
-      <div>
-        <Image
-          loading="lazy"
-          width={30}
-          height={30}
-          src={wallet.adapter.icon}
-          alt={wallet.adapter.name}
-        />
-      </div>
-      <span>{text}</span>
-    </div>
   );
 };
 
@@ -85,10 +68,7 @@ export const SolanaConnectWalletDialog = ({
           key={wallet.adapter.name}
           className="cursor-pointer "
         >
-          <WalletListItem
-            wallet={wallet}
-            text={"Install " + wallet.adapter.name}
-          />
+          <WalletListItem icon={wallet?.adapter?.icon} name={"Install "  + wallet?.adapter?.name} />
         </List.Item>
       ))}
     </List>   
