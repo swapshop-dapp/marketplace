@@ -1,13 +1,14 @@
 "use client";
 
+import ethIcon from '../assets/images/svg/eth.svg';
 import polygonIcon from '../assets/images/svg/polygon.svg';
 import solanaIcon from '../assets/images/svg/solana.svg';
 
 export type ChainId = number;
 export const CHAIN_TYPE = {
-  EVM: 'EVM',
   SOLANA: 'SOLANA',
-  SUI: 'SUI'
+  EVM: 'EVM',
+  // SUI: 'SUI'
 } as const;
 export type ChainTypeKey = keyof typeof CHAIN_TYPE;
 export type ChainTypeValue = typeof CHAIN_TYPE[ChainTypeKey];
@@ -17,6 +18,11 @@ export interface ChainInfo {
   logo: string;
   chainType: ChainTypeValue;
 };
+
+export const CHAIN_LOGO = {
+  [CHAIN_TYPE.EVM]: ethIcon,
+  [CHAIN_TYPE.SOLANA]: solanaIcon,
+}
 
 export const CHAIN_ID_UNSET = 0;
 export const CHAIN_ID_SOLANA = 1;

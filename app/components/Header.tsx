@@ -10,7 +10,7 @@ import { ToggleWalletModalBtn } from "./WalletModal";
 
 export const Header: React.FC<ComponentProps<any>> = ({children}) => {
     return (
-        <Navbar fluid rounded className={''}>
+        <Navbar fluid rounded className={'mb-5'}>
             <Navbar.Brand href="/" className={'justify-center'}>
                 <Image
                   loading="lazy"
@@ -33,7 +33,9 @@ export const Header: React.FC<ComponentProps<any>> = ({children}) => {
                         </Tooltip>
                     </div>
 
-            <ToggleWalletModalBtn className={"mr-32 md:absolute md:right-1"} title="Connect Wallet" />
+                <ToggleWalletModalBtn 
+                  className={"mr-32 md:absolute md:right-1"} 
+                />
                 </div>
             </Navbar.Collapse>
         </Navbar>
