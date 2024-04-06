@@ -24,7 +24,7 @@ export default function ProductDetail() {
     const id                      = pathname.split('/').pop()
     
     useEffect(() => {
-        axios.get(`${process.env.NEXT_API_URL}/v1/product/${id}`).then((res) => {
+        axios.get(`https://product.goswapshop.com/v1/product/${id}`).then((res) => {
             setProduct(res.data.data)
         })
     }, [ id ]);

@@ -12,7 +12,7 @@ import {
 export default function Home({}) {
     const [ product, setProduct ] = useState([])
     useEffect(() => {
-        axios.get(`${process.env.NEXT_API_URL}/v1/product`).then((res) => {
+        axios.get(`https://product.goswapshop.com/v1/product`).then((res) => {
             setProduct(res.data.data)
         })
         
