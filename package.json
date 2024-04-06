@@ -17,6 +17,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@certusone/wormhole-sdk": "^0.10.13",
     "@solana/wallet-adapter-base": "^0.9.23",
     "@solana/wallet-adapter-react": "^0.15.35",
     "@solana/wallet-adapter-react-ui": "^0.9.35",
@@ -26,7 +27,9 @@
     "@web3modal/ethereum": "^2.7.1",
     "@web3modal/react": "^2.7.1",
     "axios": "^1.6.8",
+    "bs58": "^5.0.0",
     "classnames": "^2.5.1",
+    "ethers": "v5.7",
     "flowbite-react": "^0.7.5",
     "google-map-react": "^2.2.1",
     "next": "14.1.3",
