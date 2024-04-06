@@ -52,8 +52,14 @@ export async function fetchSignedVAA(
     }
 }
 
-export function handleError(e: Error) {
+export function handleError(e: Error | any) {
     console.error(e);
     console.log("IsSending", false);
     console.log("IsVAAPending", false);
+}
+
+export const logTxResult = (id: string, blockNumber: number) =>{
+    console.log('===================');
+    console.log({ id: id, blockNumber: blockNumber });
+    console.log('===================');
 }

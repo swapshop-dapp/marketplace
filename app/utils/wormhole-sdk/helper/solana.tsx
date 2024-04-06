@@ -7,14 +7,18 @@ import {
     PublicKey,
     Transaction
 } from "@solana/web3.js";
+import { WalletContextState } from '@solana/wallet-adapter-react';
 
 export async function signSendAndConfirm(
-    signer: Keypair,
+    wallet: WalletContextState,
     connection: Connection,
     transaction: Transaction
 ) {
-    transaction.sign(signer);
-    const txid = await connection.sendRawTransaction(transaction.serialize());
+    if (!wallet.signTransaction) {
+        throw new Error("wallet.signTransaction is undefined");
+    }
+    const signed = await wallet.signTransaction(transaction);
+    const txid = await connection.sendRawTransaction(signed.serialize());
     await connection.confirmTransaction(txid);
     return txid;
 }

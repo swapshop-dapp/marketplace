@@ -1,10 +1,15 @@
+"use client";
+
 import { CHAIN_ID_POLYGON, CONTRACTS, ChainId, coalesceChainName } from "@certusone/wormhole-sdk";
 import { clusterApiUrl } from "@solana/web3.js";
 
 
-export const NETWORKS = {
+export type WORMHOLE_CONTRACT_KEYS = keyof typeof CONTRACTS;
+export type WORMHOLE_CONTRACT_VAUES = typeof CONTRACTS[WORMHOLE_CONTRACT_KEYS];
+export const NETWORKS: Record<WORMHOLE_CONTRACT_KEYS, WORMHOLE_CONTRACT_KEYS> = {
     TESTNET: "TESTNET",
     MAINNET: "MAINNET",
+    DEVNET: "DEVNET", // un-use
 };
 
 export const CLUSTER = NETWORKS.TESTNET; /// process.env.WORMHOLE_CLUSTER;
@@ -29,9 +34,13 @@ export const SOL_TOKEN_BRIDGE_ADDRESS =
 
 export const SOL_BRIDGE_ADDRESS =
     CONTRACTS[CLUSTER].solana.core;
+export const SOLANA_TOKEN_METADATA_PROGRAM_URL =
+     "https://github.com/metaplex-foundation/metaplex-program-library/tree/master/token-metadata/program";
+export const MAX_VAA_UPLOAD_RETRIES_SOLANA = 5;
+
 
 export const EVM_RPC = CLUSTER === NETWORKS.TESTNET ? {
-    [CHAIN_ID_POLYGON]: 'https://endpoints.omniatech.io/v1/matic/mumbai/public'
+    [CHAIN_ID_POLYGON]: 'https://polygon-mumbai-pokt.nodies.app'
 } : {
     [CHAIN_ID_POLYGON]: 'https://polygon-pokt.nodies.app'
 }

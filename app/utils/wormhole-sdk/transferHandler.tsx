@@ -18,14 +18,15 @@ import { Connection, Keypair } from "@solana/web3.js";
 import { Signer } from "ethers";
 import { parseUnits, zeroPad } from "ethers/lib/utils";
 import { SOLANA_HOST, SOL_BRIDGE_ADDRESS, SOL_TOKEN_BRIDGE_ADDRESS, getBridgeAddressForChain, getTokenBridgeAddressForChain } from "./consts";
-import { fetchSignedVAA, handleError, maybeAdditionalPayload } from "./utils/helper";
-import { signSendAndConfirm } from './utils/solana';
+import {
+ fetchSignedVAA,
+ handleError,
+ logTxResult,
+ maybeAdditionalPayload
+} from "./helper/helpers";
+import { signSendAndConfirm } from './helper/solana';
+import { WalletContextState } from '@solana/wallet-adapter-react';
 
-export const logTxResult = (id: string, blockNumber: number) =>{
-    console.log('===================');
-    console.log({ id: id, blockNumber: blockNumber });
-    console.log('===================');
-}
 export async function evm(
     signer: Signer,
     tokenAddress: string,
@@ -95,7 +96,7 @@ export async function evm(
 }
 
 export async function solana(
-    wallet: Keypair,
+    wallet: WalletContextState,
     payerAddress: string, //TODO: we may not need this since we have wallet
     fromAddress: string,
     mintAddress: string,

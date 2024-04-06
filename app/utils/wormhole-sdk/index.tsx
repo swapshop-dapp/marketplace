@@ -6,11 +6,8 @@ import {
     ChainId,
     isEVMChain,
 } from "@certusone/wormhole-sdk";
-import { Keypair } from "@solana/web3.js";
-import bs58 from 'bs58';
-import { Signer, ethers } from "ethers";
-import { EVM_RPC } from "./consts";
-import { evm, solana } from './handler';
+import { evm as evmTransfer, solana as solanaTransfer } from './transferHandler';
+import { evm as evmRedeem, solana as solanaRedeem } from './redeemHandler';
 
 type HandleTransfer = {
     sourceChain: ChainId;
@@ -27,9 +24,12 @@ type HandleTransfer = {
     // solana origin asset
     originAsset?: string;
     relayerFee?: string;
+    evmSigner?: any;
+    solanaSigner?: any,
+    solanaPubKey?: string,
 }
 
-const handleTransfer = ({
+export const handleTransfer = ({
     sourceChain,
     sourceAsset,
     decimals,
@@ -40,7 +40,10 @@ const handleTransfer = ({
     relayerFee,
     targetAddress,
     sourceTokenPublicKey,
-    originAsset
+    originAsset,
+    evmSigner,
+    solanaSigner,
+    solanaPubKey,
 }: HandleTransfer) => {
     if (
         isEVMChain(sourceChain) &&
@@ -49,12 +52,8 @@ const handleTransfer = ({
         !!targetAddress
     ) {
         const chainName = CHAIN_ID_TO_NAME[sourceChain];
-        const signer: Signer = new ethers.Wallet(
-            process.env[`${chainName.toUpperCase()}_PRIVATE_KEY`] as string,
-            new ethers.providers.JsonRpcProvider(EVM_RPC[sourceChain])
-        );
-        evm(
-            signer,
+        return evmTransfer(
+            evmSigner,
             sourceAsset,
             decimals,
             amount,
@@ -72,13 +71,9 @@ const handleTransfer = ({
         !!targetAddress &&
         decimals !== undefined
     ) {
-        const wallet = Keypair.fromSecretKey(Uint8Array.from(
-            bs58.decode(process.env.SOLANA_PRIVATE_KEY as string)
-        ));
-
-        solana(
-            wallet,
-            wallet.publicKey.toString(),
+        return solanaTransfer(
+            solanaSigner,
+            solanaPubKey as string,
             sourceTokenPublicKey,
             sourceAsset,
             amount,
@@ -256,6 +251,89 @@ const handleTransfer = ({
     }
 };
 
-// handleTransfer({
-//   sourceChain: CHAIN_ID_SOLANA,
-// })
+
+type HandleRedeem = {
+    targetChain: ChainId,
+    evmSigner?: any;
+    solanaWallet?: any,
+    solanaPubKey?: string,
+    signedVAA: Uint8Array,
+};
+
+export const handleRedeem = ({
+    targetChain,
+    evmSigner,
+    signedVAA,
+    solanaWallet,
+    solanaPubKey
+}: HandleRedeem) => {
+        if (isEVMChain(targetChain) && !!evmSigner && signedVAA) {
+           return evmRedeem(evmSigner, signedVAA, false, targetChain);
+        } else if (
+            targetChain === CHAIN_ID_SOLANA &&
+            !!solanaWallet &&
+            !!solanaPubKey &&
+            signedVAA
+        ) {
+            return solanaRedeem(
+                solanaWallet,
+                solanaPubKey,
+                signedVAA,
+                false
+            );
+        }
+            // else if (isTerraChain(targetChain) && !!terraWallet && signedVAA) {
+        //     terra(
+        //         dispatch,
+        //         enqueueSnackbar,
+        //         terraWallet,
+        //         signedVAA,
+        //         terraFeeDenom,
+        //         targetChain
+        //     );
+        // } else if (targetChain === CHAIN_ID_XPLA && !!xplaWallet && signedVAA) {
+        //     xpla(dispatch, enqueueSnackbar, xplaWallet, signedVAA);
+        // } else if (targetChain === CHAIN_ID_APTOS && !!aptosAddress && signedVAA) {
+        //     aptos(dispatch, enqueueSnackbar, signedVAA, signAndSubmitTransaction);
+        // } else if (
+        //     targetChain === CHAIN_ID_ALGORAND &&
+        //     algoAccounts[0] &&
+        //     !!signedVAA
+        // ) {
+        //     algo(dispatch, enqueueSnackbar, algoAccounts[0]?.address, signedVAA);
+        // } else if (
+        //     targetChain === CHAIN_ID_INJECTIVE &&
+        //     injWallet &&
+        //     injAddress &&
+        //     signedVAA
+        // ) {
+        //     injective(dispatch, enqueueSnackbar, injWallet, injAddress, signedVAA);
+        // } else if (
+        //     targetChain === CHAIN_ID_SEI &&
+        //     seiSigningCosmWasmClient &&
+        //     seiAddress &&
+        //     signedVAA
+        // ) {
+        //     sei(
+        //         dispatch,
+        //         enqueueSnackbar,
+        //         seiSigningCosmWasmClient,
+        //         seiAddress,
+        //         signedVAA
+        //     );
+        // } else if (
+        //     targetChain === CHAIN_ID_NEAR &&
+        //     nearAccountId &&
+        //     wallet &&
+        //     !!signedVAA
+        // ) {
+        //     near(dispatch, enqueueSnackbar, nearAccountId, signedVAA, wallet);
+        // } else if (
+        //     targetChain === CHAIN_ID_SUI &&
+        //     suiWallet.address &&
+        //     !!signedVAA
+        // ) {
+        //     sui(dispatch, enqueueSnackbar, suiWallet, signedVAA);
+        // }
+        //
+}
