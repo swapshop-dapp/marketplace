@@ -3,7 +3,7 @@ import { CustomFlowbiteTheme } from 'flowbite-react';
 export const themes: CustomFlowbiteTheme = {
     button: {
         base: 'btn-goswapshop-bg',
-        "label": "ml-2 inline-flex h-4 w-4 items-center justify-center rounded-full bg-cyan-200 text-xs font-semibold text-cyan-800",
+        "label": "ml-2 inline-flex h-4 w-4 items-center text-center justify-center rounded-full bg-cyan-200 text-xs font-semibold text-cyan-800",
     },
     navbar: {
         "root": {
@@ -139,5 +139,145 @@ export const themes: CustomFlowbiteTheme = {
             "base": "flex h-full snap-mandatory overflow-y-hidden overflow-x-scroll scroll-smooth rounded-lg",
             "snap": "snap-x"
         }
+    },
+    textarea: {
+        "base": "block w-full rounded-lg border text-sm disabled:cursor-not-allowed disabled:opacity-50",
+        "colors": {
+            "gray": "border-gray-300 bg-gray-50 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+            "info": "border-cyan-500 bg-cyan-50 text-cyan-900 placeholder-cyan-700 focus:border-cyan-500 focus:ring-cyan-500 dark:border-cyan-400 dark:bg-cyan-100 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+            "failure": "border-red-500 bg-red-50 text-red-900 placeholder-red-700 focus:border-red-500 focus:ring-red-500 dark:border-red-400 dark:bg-red-100 dark:focus:border-red-500 dark:focus:ring-red-500",
+            "warning": "border-yellow-500 bg-yellow-50 text-yellow-900 placeholder-yellow-700 focus:border-yellow-500 focus:ring-yellow-500 dark:border-yellow-400 dark:bg-yellow-100 dark:focus:border-yellow-500 dark:focus:ring-yellow-500",
+            "success": "border-green-500 bg-green-50 text-green-900 placeholder-green-700 focus:border-green-500 focus:ring-green-500 dark:border-green-400 dark:bg-green-100 dark:focus:border-green-500 dark:focus:ring-green-500"
+        },
+        "withShadow": {
+            "on": "shadow-sm dark:shadow-sm-light",
+            "off": ""
+        }
+    },
+    textInput: {
+        "base": "flex",
+        "addon": "inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-200 px-3 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-600 dark:text-gray-400",
+        "field": {
+            "base": "relative w-full",
+            "icon": {
+                "base": "pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3",
+                "svg": "h-5 w-5 text-gray-500 dark:text-gray-400"
+            },
+            "rightIcon": {
+                "base": "pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3",
+                "svg": "h-5 w-5 text-gray-500 dark:text-gray-400"
+            },
+            "input": {
+                "base": "block w-full border disabled:cursor-not-allowed disabled:opacity-50",
+                "sizes": {
+                    "sm": "p-2 sm:text-xs",
+                    "md": "p-2.5 text-sm",
+                    "lg": "p-4 sm:text-base"
+                },
+                "colors": {
+                    "gray": "border-gray-300 bg-gray-50 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                    "info": "border-cyan-500 bg-cyan-50 text-cyan-900 placeholder-cyan-700 focus:border-cyan-500 focus:ring-cyan-500 dark:border-cyan-400 dark:bg-cyan-100 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                    "failure": "border-red-500 bg-red-50 text-red-900 placeholder-red-700 focus:border-red-500 focus:ring-red-500 dark:border-red-400 dark:bg-red-100 dark:focus:border-red-500 dark:focus:ring-red-500",
+                    "warning": "border-yellow-500 bg-yellow-50 text-yellow-900 placeholder-yellow-700 focus:border-yellow-500 focus:ring-yellow-500 dark:border-yellow-400 dark:bg-yellow-100 dark:focus:border-yellow-500 dark:focus:ring-yellow-500",
+                    "success": "border-green-500 bg-green-50 text-green-900 placeholder-green-700 focus:border-green-500 focus:ring-green-500 dark:border-green-400 dark:bg-green-100 dark:focus:border-green-500 dark:focus:ring-green-500"
+                },
+                "withRightIcon": {
+                    "on": "pr-10",
+                    "off": ""
+                },
+                "withIcon": {
+                    "on": "pl-10",
+                    "off": ""
+                },
+                "withAddon": {
+                    "on": "rounded-r-lg",
+                    "off": "rounded-lg"
+                },
+                "withShadow": {
+                    "on": "shadow-sm dark:shadow-sm-light",
+                    "off": ""
+                }
+            }
+        }
+    },
+    label: {
+        "root": {
+            "base": "text-sm font-medium",
+            "disabled": "opacity-50",
+            "colors": {
+                "default": "text-gray-900 dark:text-white",
+                "info": "text-cyan-500 dark:text-cyan-600",
+                "failure": "text-red-700 dark:text-red-500",
+                "warning": "text-yellow-500 dark:text-yellow-600",
+                "success": "text-green-700 dark:text-green-500"
+            }
+        }
+    },
+    fileInput: {
+        "root": {
+            "base": "flex"
+        },
+        "field": {
+            "base": "relative w-full",
+            "input": {
+                "base": "block w-full overflow-hidden rounded-lg border disabled:cursor-not-allowed disabled:opacity-50",
+                "sizes": {
+                    "sm": "sm:text-xs",
+                    "md": "text-sm",
+                    "lg": "sm:text-base"
+                },
+                "colors": {
+                    "gray": "border-gray-300 bg-gray-50 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                    "info": "border-cyan-500 bg-cyan-50 text-cyan-900 placeholder-cyan-700 focus:border-cyan-500 focus:ring-cyan-500 dark:border-cyan-400 dark:bg-cyan-100 dark:focus:border-cyan-500 dark:focus:ring-cyan-500",
+                    "failure": "border-red-500 bg-red-50 text-red-900 placeholder-red-700 focus:border-red-500 focus:ring-red-500 dark:border-red-400 dark:bg-red-100 dark:focus:border-red-500 dark:focus:ring-red-500",
+                    "warning": "border-yellow-500 bg-yellow-50 text-yellow-900 placeholder-yellow-700 focus:border-yellow-500 focus:ring-yellow-500 dark:border-yellow-400 dark:bg-yellow-100 dark:focus:border-yellow-500 dark:focus:ring-yellow-500",
+                    "success": "border-green-500 bg-green-50 text-green-900 placeholder-green-700 focus:border-green-500 focus:ring-green-500 dark:border-green-400 dark:bg-green-100 dark:focus:border-green-500 dark:focus:ring-green-500"
+                }
+            }
+        }
+    },
+    timeline: {
+        "root": {
+            "direction": {
+                "horizontal": "sm:flex",
+                "vertical": "relative border-l border-gray-200 dark:border-gray-700"
+            }
+        },
+        "item": {
+            "root": {
+                "horizontal": "relative mb-6 sm:mb-0",
+                "vertical": "mb-10 ml-6"
+            },
+            "content": {
+                "root": {
+                    "base": "mt-3 sm:pr-8"
+                },
+                "body": {
+                    "base": "mb-4 text-base font-normal text-gray-500 dark:text-gray-400"
+                },
+                "time": {
+                    "base": "mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500"
+                },
+                "title": {
+                    "base": "text-lg font-semibold text-gray-900 dark:text-white"
+                }
+            },
+            "point": {
+                "horizontal": "flex items-center",
+                "line": "hidden h-0.5 w-full bg-gray-200 dark:bg-gray-700 sm:flex",
+                "marker": {
+                    "base": {
+                        "horizontal": "absolute -left-1.5 h-3 w-3 rounded-full border border-white bg-gray-200 dark:border-gray-900 dark:bg-gray-700",
+                        "vertical": "absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full border border-white bg-gray-200 dark:border-gray-900 dark:bg-gray-700"
+                    },
+                    "icon": {
+                        "base": "h-3 w-3 text-cyan-600 dark:text-cyan-300",
+                        "wrapper": "absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full bg-cyan-200 ring-8 ring-white dark:bg-cyan-900 dark:ring-gray-900"
+                    }
+                },
+                "vertical": ""
+            }
+        }
     }
+    
 }

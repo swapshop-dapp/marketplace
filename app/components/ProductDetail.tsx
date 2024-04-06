@@ -1,6 +1,15 @@
-import React, { ComponentProps } from 'react';
+"use client"
 
-export const ProductDetail: React.FC<ComponentProps<any>> = (props) => {
+import React, {
+    ComponentProps,
+    useEffect,
+    useState
+} from 'react';
+import axios from 'axios';
+import { usePathname } from 'next/navigation';
+
+
+export const ProductDetail: React.FC<ComponentProps<any>> = ({product}) => {
     return (
         <div className="flex w-screen justify-center">
             <div className="w-1/2">
@@ -16,8 +25,8 @@ export const ProductDetail: React.FC<ComponentProps<any>> = (props) => {
                 <div className="flex justify-center">
                     <p className="text-xl">Price: $100</p>
                 </div>
-                <div className="flex justify-center">
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <div className="flex w-full">
+                    <button className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
                         Add to Cart
                     </button>
                 </div>

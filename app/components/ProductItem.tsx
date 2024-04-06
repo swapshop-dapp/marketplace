@@ -1,5 +1,3 @@
-"use client";
-
 import {
     Avatar,
     Card,
@@ -7,16 +5,16 @@ import {
 }                   from "flowbite-react";
 import { FaSafari } from 'react-icons/fa6';
 
-export const ProductItem = () => {
+export const ProductItem = ({product}) => {
     function handleClick() {
-        return window.open('products/1', '_blank');
+        return window.open(`products/${product.id}`, '_blank');
     }
     
     return (
         <Card
-            className="max-w-sm hover:cursor-pointer"
+            className="max-h-sm max-w-sm hover:cursor-pointer"
             imgAlt="Apple Watch Series 7 in colors pink, silver, and black"
-            imgSrc="https://static.goswapshop.com/images/apple-watch.png"
+            imgSrc={product.images[0]}
             onClick={handleClick}
         >
             
@@ -46,16 +44,16 @@ export const ProductItem = () => {
                 </div>
             </div>
             <h5 className="text-lg font-semibold tracking-tight text-gray-900 dark:text-white">
-                Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport
+                {product.title}
             </h5>
             <div className="flex items-center">
                 <div className={'flex gap-1'}>
                     <img src="https://static.goswapshop.com/assets/usdc.svg" alt="" width={24}/>
-                    <span className="text-3xl font-bold text-gray-900 dark:text-white">599</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-white">${product.price}</span>
                 </div>
                 <div className={'items-end self-end align-bottom dark:text-white'}>
                     <span>~</span>
-                    <span className="text-lg font-bold text-gray-900 dark:text-white">$599</span>
+                    <span className="text-lg font-bold text-gray-900 dark:text-white">${product.price}</span>
                 </div>
             </div>
         </Card>

@@ -1,28 +1,44 @@
-import { GCarousel } from '@app/components/Carousel';
+"use client"
+import { GCarousel }   from '@app/components/Carousel';
 import {
     Avatar,
     Button
-}                    from 'flowbite-react';
-import { GRating }   from '@app/components/GRating';
-import { FaSafari }  from 'react-icons/fa6';
+}                      from 'flowbite-react';
+import { GRating }     from '@app/components/GRating';
+import { FaSafari }    from 'react-icons/fa6';
+import {
+    useEffect,
+    useState
+}                      from 'react';
+import { usePathname } from 'next/navigation';
+import axios           from 'axios';
 
 export default function ProductDetail() {
+    const pathname                = usePathname()
+    const [ product, setProduct ] = useState({})
+    const id                      = pathname.split('/').pop()
+    
+    useEffect(() => {
+        axios.get(`http://localhost:3333/v1/product/${id}`).then((res) => {
+            setProduct(res.data.data)
+        })
+    }, [ id ]);
+    console.log(product)
     return (
         <div className={'min-h-screen py-20'}>
             <div className={'grid grid-cols-2 gap-10'}>
-                <GCarousel></GCarousel>
+                <GCarousel images={product.images || []}></GCarousel>
                 <div className={'text-4xl text-white'}>
-                    
                     <h5 className="text-lg font-semibold tracking-tight text-gray-900 dark:text-white">
-                        Apple Watch Series 7 GPS, Aluminium Case, Starlight Sport
+                        {product.title}
                     </h5>
                     <div className="flex items-center justify-start md:gap-4">
                         <div className={'flex gap-1'}>
                             <img src="https://static.goswapshop.com/assets/usdc.svg" alt="" width={24}/>
-                            <span className="text-3xl font-bold text-gray-900 dark:text-white">599 </span>
-                            <span className={'self-center align-middle text-xl'}>($599)</span>
+                            <span className="text-3xl font-bold text-gray-900 dark:text-white">{product.price} </span>
+                            <span className={'self-center align-middle text-xl'}>(${product.price})</span>
                         </div>
-                        <Button className={'w-1/5 self-end text-center align-middle'}>Place An Order</Button>
+                        <Button className={'self-end text-center align-middle md:w-1/3'}>Place An Order</Button>
                     </div>
                     <div className={'flex md:mt-4 '}>
                         <div className={'grid grid-cols-2 gap-4'}>

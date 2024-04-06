@@ -1,14 +1,19 @@
-import { ProductItem }    from '@app/components/ProductItem';
-import { ComponentProps } from 'react';
-import classnames      from 'classnames';
+"use client"
 
-export const ProductList: React.FC<ComponentProps<any>> = (props) => {
+import { ProductItem }    from '@app/components/ProductItem';
+import {
+    ComponentProps,
+    useEffect,
+    useState
+} from 'react';
+import classnames         from 'classnames';
+
+export const ProductList: React.FC<ComponentProps<any>> = ({data, className}) => {
     return (
-        <div className={classnames(props.className, "grid md:grid-cols-4 gap-3")}>
-            <ProductItem></ProductItem>
-            <ProductItem></ProductItem>
-            <ProductItem></ProductItem>
-            <ProductItem></ProductItem>
+        <div className={classnames(className, "grid md:grid-cols-4 gap-3")}>
+            {data.length && data.map((item: any) => {
+                return <ProductItem product={item} key={item.id}></ProductItem>
+            })}
         </div>
     )
 }
