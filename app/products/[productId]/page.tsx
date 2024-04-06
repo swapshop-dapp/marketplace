@@ -15,7 +15,12 @@ import axios           from 'axios';
 
 export default function ProductDetail() {
     const pathname                = usePathname()
-    const [ product, setProduct ] = useState({})
+    const [ product, setProduct ] = useState({
+        id: 1,
+        images: [],
+        title: '',
+        price: 0
+    })
     const id                      = pathname.split('/').pop()
     
     useEffect(() => {
@@ -23,7 +28,6 @@ export default function ProductDetail() {
             setProduct(res.data.data)
         })
     }, [ id ]);
-    console.log(product)
     return (
         <div className={'min-h-screen py-20'}>
             <div className={'grid grid-cols-2 gap-10'}>

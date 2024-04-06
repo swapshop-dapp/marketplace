@@ -5,6 +5,7 @@ import {
 }                   from "flowbite-react";
 import { FaSafari } from 'react-icons/fa6';
 
+// @ts-ignore
 export const ProductItem = ({product}) => {
     function handleClick() {
         return window.open(`products/${product.id}`, '_blank');
