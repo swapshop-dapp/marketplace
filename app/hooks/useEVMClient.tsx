@@ -1,5 +1,7 @@
 "use client";
 
+import { createWalletClient, custom } from 'viem';
+import { polygonMumbai } from 'viem/chains';
 import { useAccount, useDisconnect } from "wagmi";
 import { META_MASK_ERROR_NAMES } from "../consts/metamaskError";
 
@@ -13,17 +15,22 @@ const handleError = (errorName = '') => {
 };
 
 export const useEVMClient = () => {
-  const { disconnect } = useDisconnect({
-    onError(data) {
-      handleError(data.name);
-    },
-  });
+    const { disconnect } = useDisconnect({
+        onError(data) {
+        handleError(data.name);
+        },
+    });
+    const client = createWalletClient({
+        chain: polygonMumbai,
+        transport: custom(window.ethereum)
+    }) 
+    const { isConnected, address } = useAccount();
 
-  const { isConnected, address } = useAccount();
 
-  return {
-    disconnect,
-    isConnected,
-    address,
-  }
+    return {
+        disconnect,
+        isConnected,
+        address,
+        signer: client
+    }
 }
