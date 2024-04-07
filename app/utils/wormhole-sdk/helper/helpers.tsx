@@ -43,6 +43,7 @@ export async function fetchSignedVAA(
         sequence
     );
     if (vaaBytes !== undefined) {
+        window.localStorage.setItem('VAA', uint8ArrayToHex(vaaBytes));
         console.log('SignedVAAHex', uint8ArrayToHex(vaaBytes));
         console.log('IsVAAPending,', false);
     } else if (isPending) {
@@ -62,4 +63,10 @@ export const logTxResult = (id: string, blockNumber: number) =>{
     console.log('===================');
     console.log({ id: id, blockNumber: blockNumber });
     console.log('===================');
+}
+
+export const sleep = async (ms: number) => {
+    return new Promise((r) => {
+        setTimeout(() => {r(ms)}, ms)
+    })
 }

@@ -1,19 +1,27 @@
 "use client"
-import { GCarousel }   from '@app/components/Carousel';
+import { useEVMClient } from '@/app/hooks/useEVMClient';
+import { GCarousel } from '@app/components/Carousel';
+import { GRating } from '@app/components/GRating';
+import { handleRedeem, handleTransfer } from "@app/utils/wormhole-sdk";
+import { CHAIN_ID_POLYGON, CHAIN_ID_SOLANA, hexToUint8Array } from '@certusone/wormhole-sdk';
+import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
+import axios from 'axios';
 import {
     Avatar,
     Button
-}                      from 'flowbite-react';
-import { GRating }     from '@app/components/GRating';
-import { FaSafari }    from 'react-icons/fa6';
+} from 'flowbite-react';
+import { usePathname } from 'next/navigation';
 import {
     useEffect,
     useState
-}                      from 'react';
-import { usePathname } from 'next/navigation';
-import axios           from 'axios';
+} from 'react';
+import { FaSafari } from 'react-icons/fa6';
+const SOL_PRICE = 181; // USDC
 
 export default function ProductDetail() {
+    const solanaWallet = useSolanaWallet()
+    const evmWallet = useEVMClient()
+
     const pathname                = usePathname()
     const [ product, setProduct ] = useState({
         id: 1,
@@ -22,7 +30,6 @@ export default function ProductDetail() {
         price: 0
     })
     const id                      = pathname.split('/').pop()
-    
     useEffect(() => {
         axios.get(`https://product.goswapshop.com/v1/product/${id}`).then((res) => {
             setProduct(res.data.data)
@@ -36,14 +43,46 @@ export default function ProductDetail() {
                     <h5 className="text-lg font-semibold tracking-tight text-gray-900 dark:text-white">
                         {product.title}
                     </h5>
-                    <div className="flex items-center justify-start md:gap-4">
+                    <div className="flex flex-col items-start justify-center md:gap-4">
                         <div className={'flex gap-1'}>
                             <img src="https://static.goswapshop.com/assets/usdc.svg" alt="" width={24}/>
                             <span className="text-3xl font-bold text-gray-900 dark:text-white">{product.price} </span>
                             <span className={'self-center align-middle text-xl'}>(${product.price})</span>
                         </div>
-                        <Button className={'self-end text-center align-middle md:w-1/3'}>Place An Order</Button>
+                        <div className='flex'>
+                            <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png" alt="" width={35} className='mr-1 rounded-full'  />
+                            <span className="text-3xl font-bold text-gray-900 dark:text-white">{(product.price / SOL_PRICE).toFixed(3)} </span>                            
+                        </div>
                     </div>
+                    <Button
+                        className={'my-2 self-end px-3 py-2 text-center align-middle'}
+                        onClick={async () => {
+                            await handleTransfer({
+                                sourceChain: CHAIN_ID_SOLANA,
+                                amount: (product.price / SOL_PRICE).toFixed(3),
+                                solanaSigner: solanaWallet,
+                                sourceTokenPublicKey: solanaWallet.publicKey?.toString(),
+                                solanaPubKey: solanaWallet.publicKey?.toString(),
+                                isNative: true,
+                                targetChain: CHAIN_ID_POLYGON,
+                                decimals: 9
+                            }) 
+                        }}
+                    >Place An Order</Button>
+                    <br />
+                    <Button
+                        color={'gray'}
+                        className={'btn-goswapshop-bg-secondary my-2 self-end px-3 py-2 text-center align-middle'}
+                        onClick={async () => {
+                            await handleRedeem({
+                                evmSigner: evmWallet.signer,
+                                targetChain: CHAIN_ID_POLYGON,
+                                signedVAA: hexToUint8Array(window.localStorage.getItem("VAA") as string),
+                            })
+                            window.localStorage.removeItem('VAA')
+                        }}
+                    >Claim The Order</Button>
+                    
                     <div className={'flex md:mt-4 '}>
                         <div className={'grid grid-cols-2 gap-4'}>
                             <Avatar img="https://static.goswapshop.com/images/people/profile-picture-5.jpg" rounded

@@ -1,7 +1,6 @@
 "use client";
 
-import { createWalletClient, custom } from 'viem';
-import { polygonMumbai } from 'viem/chains';
+import { ethers } from 'ethers';
 import { useAccount, useDisconnect } from "wagmi";
 import { META_MASK_ERROR_NAMES } from "../consts/metamaskError";
 
@@ -20,17 +19,15 @@ export const useEVMClient = () => {
         handleError(data.name);
         },
     });
-    const client = createWalletClient({
-        chain: polygonMumbai,
-        transport: custom(window.ethereum)
-    }) 
     const { isConnected, address } = useAccount();
-
+    const client = typeof window !== "undefined"  ? new ethers.providers.Web3Provider(window.ethereum) : null;
+    const signer = client?.getSigner();
 
     return {
         disconnect,
         isConnected,
         address,
-        signer: client
+        signer: signer,
+        client: client,
     }
 }

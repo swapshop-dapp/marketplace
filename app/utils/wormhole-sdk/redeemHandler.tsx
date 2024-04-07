@@ -1,6 +1,15 @@
 "use client";
 
 import {
+    MAX_VAA_UPLOAD_RETRIES_SOLANA,
+    SOLANA_HOST,
+    SOL_BRIDGE_ADDRESS,
+    SOL_TOKEN_BRIDGE_ADDRESS,
+    getTokenBridgeAddressForChain
+} from '@app/utils/wormhole-sdk/consts';
+import { handleError, logTxResult } from '@app/utils/wormhole-sdk/helper/helpers';
+import { signSendAndConfirm } from '@app/utils/wormhole-sdk/helper/solana';
+import {
     CHAIN_ID_KLAYTN,
     ChainId,
     postVaaSolanaWithRetry,
@@ -9,26 +18,18 @@ import {
     redeemOnEthNative,
     redeemOnSolana
 } from '@certusone/wormhole-sdk';
-import { Signer }  from 'ethers';
-import {
-    getTokenBridgeAddressForChain,
-    MAX_VAA_UPLOAD_RETRIES_SOLANA,
-    SOL_BRIDGE_ADDRESS,
-    SOL_TOKEN_BRIDGE_ADDRESS,
-    SOLANA_HOST
-} from '@app/utils/wormhole-sdk/consts';
-import { logTxResult, handleError } from '@app/utils/wormhole-sdk/helper/helpers';
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { Connection } from '@solana/web3.js';
-import { signSendAndConfirm } from '@app/utils/wormhole-sdk/helper/solana';
 
 export async function evm(
-    signer: Signer,
+    signer: any,
     signedVAA: Uint8Array,
     isNative: boolean,
     chainId: ChainId
 ) {
     console.log('is redeeming');
+    console.log('chain id', chainId);
+    console.log('isNative', isNative);
     try {
         // Klaytn requires specifying gasPrice
         const overrides =

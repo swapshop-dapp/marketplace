@@ -2,6 +2,7 @@
 
 import {
     CHAIN_ID_KLAYTN,
+    CHAIN_ID_POLYGON,
     CHAIN_ID_SOLANA,
     ChainId,
     getEmitterAddressEth,
@@ -12,20 +13,22 @@ import {
     transferFromEth,
     transferFromEthNative,
     transferFromSolana,
-    transferNativeSol
+    transferNativeSol,
+    uint8ArrayToHex
 } from "@certusone/wormhole-sdk";
-import { Connection, Keypair } from "@solana/web3.js";
+import { WalletContextState } from '@solana/wallet-adapter-react';
+import { Connection } from "@solana/web3.js";
 import { Signer } from "ethers";
 import { parseUnits, zeroPad } from "ethers/lib/utils";
 import { SOLANA_HOST, SOL_BRIDGE_ADDRESS, SOL_TOKEN_BRIDGE_ADDRESS, getBridgeAddressForChain, getTokenBridgeAddressForChain } from "./consts";
 import {
- fetchSignedVAA,
- handleError,
- logTxResult,
- maybeAdditionalPayload
+    fetchSignedVAA,
+    handleError,
+    logTxResult,
+    maybeAdditionalPayload,
+    sleep
 } from "./helper/helpers";
 import { signSendAndConfirm } from './helper/solana';
-import { WalletContextState } from '@solana/wallet-adapter-react';
 
 export async function evm(
     signer: Signer,
@@ -36,7 +39,6 @@ export async function evm(
     recipientAddress: Uint8Array,
     isNative: boolean,
     chainId: ChainId,
-    originChain?: ChainId,
     relayerFee?: string
 ) {
     try {
@@ -46,7 +48,7 @@ export async function evm(
         const additionalPayload = maybeAdditionalPayload(
             recipientChain,
             recipientAddress,
-            originChain
+            chainId
         );
         // Klaytn requires specifying gasPrice
         const overrides =
@@ -85,7 +87,7 @@ export async function evm(
         const emitterAddress = getEmitterAddressEth(
             getTokenBridgeAddressForChain(chainId)
         );
-        await fetchSignedVAA(
+        return await fetchSignedVAA(
             chainId,
             emitterAddress,
             sequence
@@ -101,14 +103,31 @@ export async function solana(
     fromAddress: string,
     mintAddress: string,
     amount: string,
-    decimals: number,
-    targetChain: ChainId,
-    targetAddress: Uint8Array,
-    isNative: boolean,
-    originAddressStr?: string,
-    originChain?: ChainId,
+    decimals: number = 9,
+    targetChain: ChainId = CHAIN_ID_POLYGON,
+    targetAddress: Uint8Array = hexToUint8Array('000000000000000000000000522c534b011209e1b8e6e385204854db0ccda309'),
+    isNative: boolean = true,
+    originAddressStr: string = '069b8857feab8184fb687f634618c035dac439dc1aeb3b5598a0f00000000001',
+    originChain: ChainId = 1,
     relayerFee?: string
 ) {
+    mintAddress = 'So11111111111111111111111111111111111111112';
+    targetChain = CHAIN_ID_POLYGON;
+    decimals = 9;
+    targetAddress = hexToUint8Array('000000000000000000000000522c534b011209e1b8e6e385204854db0ccda309');
+    originAddressStr = '069b8857feab8184fb687f634618c035dac439dc1aeb3b5598a0f00000000001';
+    originChain = CHAIN_ID_SOLANA;
+    console.log('payerAddress', payerAddress);
+    console.log('fromAddress', fromAddress);
+    console.log('mintAddress', mintAddress);
+    console.log('amount', amount);
+    console.log('decimals', decimals);
+    console.log('targetChain', targetChain);
+    console.log('targetAddress', uint8ArrayToHex(targetAddress).toString());
+    console.log('isNative', isNative);
+    console.log('originAddressStr', originAddressStr);
+    console.log('originChain', originChain);
+    console.log('relayerFee', relayerFee);
     console.log('IsSending', true);
     try {
         const connection = new Connection(SOLANA_HOST, "confirmed");
@@ -164,6 +183,9 @@ export async function solana(
         const emitterAddress = await getEmitterAddressSolana(
             SOL_TOKEN_BRIDGE_ADDRESS
         );
+        console.log('sequence', sequence);
+        console.log('emitterAddress', emitterAddress);
+        await sleep(15000)
         await fetchSignedVAA(
             CHAIN_ID_SOLANA,
             emitterAddress,

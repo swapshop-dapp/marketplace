@@ -2,20 +2,18 @@
 
 import {
     CHAIN_ID_SOLANA,
-    CHAIN_ID_TO_NAME,
     ChainId,
-    isEVMChain,
+    isEVMChain
 } from "@certusone/wormhole-sdk";
-import { evm as evmTransfer, solana as solanaTransfer } from './transferHandler';
 import { evm as evmRedeem, solana as solanaRedeem } from './redeemHandler';
+import { evm as evmTransfer, solana as solanaTransfer } from './transferHandler';
 
 type HandleTransfer = {
     sourceChain: ChainId;
-    sourceAsset: string;
-    decimals: number;
+    sourceAsset?: string;
+    decimals?: number;
     amount: string;
     targetChain: ChainId;
-    originChain: ChainId;
     isNative: boolean;
     // evm token address
     targetAddress?: Uint8Array;
@@ -35,15 +33,14 @@ export const handleTransfer = ({
     decimals,
     amount,
     targetChain,
-    originChain,
     isNative,
     relayerFee,
     targetAddress,
     sourceTokenPublicKey,
-    originAsset,
     evmSigner,
     solanaSigner,
     solanaPubKey,
+    originAsset,
 }: HandleTransfer) => {
     if (
         isEVMChain(sourceChain) &&
@@ -51,7 +48,6 @@ export const handleTransfer = ({
         decimals !== undefined &&
         !!targetAddress
     ) {
-        const chainName = CHAIN_ID_TO_NAME[sourceChain];
         return evmTransfer(
             evmSigner,
             sourceAsset,
@@ -61,28 +57,27 @@ export const handleTransfer = ({
             targetAddress,
             isNative,
             sourceChain,
-            originChain,
             relayerFee
         );
     } else if (
         sourceChain === CHAIN_ID_SOLANA &&
-        !!sourceAsset &&
-        !!sourceTokenPublicKey &&
-        !!targetAddress &&
+        // !!sourceAsset &&
+        // !!sourceTokenPublicKey &&
+        // !!targetAddress &&
         decimals !== undefined
     ) {
         return solanaTransfer(
             solanaSigner,
             solanaPubKey as string,
-            sourceTokenPublicKey,
-            sourceAsset,
+            sourceTokenPublicKey as string,
+            sourceAsset as string,
             amount,
             decimals,
             targetChain,
             targetAddress,
             isNative,
             originAsset,
-            originChain,
+            sourceChain,
             relayerFee
         );
         // } else if (
@@ -257,15 +252,15 @@ type HandleRedeem = {
     evmSigner?: any;
     solanaWallet?: any,
     solanaPubKey?: string,
-    signedVAA: Uint8Array,
+    signedVAA?: Uint8Array,
 };
 
 export const handleRedeem = ({
-    targetChain,
     evmSigner,
-    signedVAA,
     solanaWallet,
-    solanaPubKey
+    solanaPubKey,
+    targetChain,
+    signedVAA,
 }: HandleRedeem) => {
         if (isEVMChain(targetChain) && !!evmSigner && signedVAA) {
            return evmRedeem(evmSigner, signedVAA, false, targetChain);

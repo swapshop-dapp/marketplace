@@ -2,7 +2,7 @@ import {
     Avatar,
     Card,
     Rating
-}                   from "flowbite-react";
+} from "flowbite-react";
 import { FaSafari } from 'react-icons/fa6';
 
 // @ts-ignore
@@ -14,8 +14,11 @@ export const ProductItem = ({product}) => {
     return (
         <Card
             className="max-h-sm max-w-sm hover:cursor-pointer"
-            imgAlt="Apple Watch Series 7 in colors pink, silver, and black"
-            imgSrc={product.images[0]}
+            renderImage={() => <img
+                src={product.images[0]}
+                className={'!h-[345px]'}
+                alt="Apple Watch Series 7 in colors pink, silver, and black"
+            />}
             onClick={handleClick}
         >
             
@@ -58,6 +61,5 @@ export const ProductItem = ({product}) => {
                 </div>
             </div>
         </Card>
-    )
-        ;
+    );
 }

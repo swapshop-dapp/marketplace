@@ -1,13 +1,12 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import { MintLayout } from "@solana/spl-token";
+import { WalletContextState } from '@solana/wallet-adapter-react';
 import {
     AccountInfo,
     Connection,
-    Keypair,
     PublicKey,
     Transaction
 } from "@solana/web3.js";
-import { WalletContextState } from '@solana/wallet-adapter-react';
 
 export async function signSendAndConfirm(
     wallet: WalletContextState,
@@ -67,10 +66,11 @@ export const getMultipleAccounts = async (
 };
 
 export function chunks<T>(array: T[], size: number): T[][] {
-    return Array.apply (
-        0,
-        new Array(Math.ceil(array.length / size))
-    ).map((_, index) => array.slice(index * size, (index + 1) * size));
+    const result: T[][] = [];
+    for (let index = 0; index < Math.ceil(array.length / size); index++) {
+        result.push(array.slice(index * size, (index + 1) * size));
+    }
+    return result;
 }
 
 export function shortenAddress(address: string) {
