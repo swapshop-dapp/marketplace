@@ -55,20 +55,17 @@ export default function ProductDetail() {
                         </div>
                     </div>
                     <Button
-                        className={'my-2 self-end px-3 py-2 text-center align-middle'}
+                        color={'gray'}
+                        className={'btn-goswapshop-bg-secondary my-2 self-end px-3 py-2 text-center align-middle'}
                         onClick={async () => {
-                            await handleTransfer({
-                                sourceChain: CHAIN_ID_SOLANA,
-                                amount: (product.price / SOL_PRICE).toFixed(3),
-                                solanaSigner: solanaWallet,
-                                sourceTokenPublicKey: solanaWallet.publicKey?.toString(),
-                                solanaPubKey: solanaWallet.publicKey?.toString(),
-                                isNative: true,
+                            await handleRedeem({
+                                evmSigner: evmWallet.signer,
                                 targetChain: CHAIN_ID_POLYGON,
-                                decimals: 9
-                            }) 
+                                signedVAA: hexToUint8Array(window.localStorage.getItem("VAA") as string),
+                            })
+                            window.localStorage.removeItem('VAA')
                         }}
-                    >Place An Order</Button>
+                    >Claim The Order</Button>
                     
                     <div className={'flex md:mt-4 '}>
                         <div className={'grid grid-cols-2 gap-4'}>

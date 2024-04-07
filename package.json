@@ -10,8 +10,8 @@
   "description": "Marketplace for GoSwapShop",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "build": "next build && chmod +x script.sh",
+    "start": "./script.sh && next start",
     "format": "prettier . --write",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
