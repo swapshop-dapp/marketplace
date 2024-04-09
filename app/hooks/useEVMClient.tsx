@@ -20,7 +20,8 @@ export const useEVMClient = () => {
         },
     });
     const { isConnected, address } = useAccount();
-    const client = typeof window !== "undefined"  ? new ethers.providers.Web3Provider(window.ethereum) : null;
+    const client = typeof window !== "undefined" && typeof window.ethereum !== 'undefined' ?
+      new ethers.providers.Web3Provider(window.ethereum) : null;
     const signer = client?.getSigner();
 
     return {
