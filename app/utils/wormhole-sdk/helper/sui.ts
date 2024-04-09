@@ -1,4 +1,3 @@
-import { JsonRpcProvider } from "@mysten/sui.js";
-import { SUI_CONNECTION } from "./consts";
+import { SuiClient } from "@mysten/sui.js/client";
 
-export const getSuiProvider = () => new JsonRpcProvider(SUI_CONNECTION);
+export const getSuiProvider = (connection: string) => new SuiClient({ url: connection });

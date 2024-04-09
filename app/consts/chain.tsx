@@ -3,12 +3,13 @@
 import ethIcon from '../assets/images/svg/eth.svg';
 import polygonIcon from '../assets/images/svg/polygon.svg';
 import solanaIcon from '../assets/images/svg/solana.svg';
+import suiIcon from '../assets/images/svg/sui.svg';
 
 export type ChainId = number;
 export const CHAIN_TYPE = {
   SOLANA: 'SOLANA',
   EVM: 'EVM',
-  // SUI: 'SUI'
+  SUI: 'SUI'
 } as const;
 export type ChainTypeKey = keyof typeof CHAIN_TYPE;
 export type ChainTypeValue = typeof CHAIN_TYPE[ChainTypeKey];
@@ -22,6 +23,7 @@ export interface ChainInfo {
 export const CHAIN_LOGO = {
   [CHAIN_TYPE.EVM]: ethIcon,
   [CHAIN_TYPE.SOLANA]: solanaIcon,
+  [CHAIN_TYPE.SUI]: suiIcon,
 }
 
 export const CHAIN_ID_UNSET = 0;

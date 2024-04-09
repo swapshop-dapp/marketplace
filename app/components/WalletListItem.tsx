@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-export const WalletListItem = ({ icon, name, }: { icon: any; name:string; }) => {
+export const WalletListItem = ({ icon, name }: { icon: any; name:string; }) => {
   return (
     <div className="flex flex-wrap items-center gap-3">
       <div>

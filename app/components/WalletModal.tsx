@@ -1,30 +1,33 @@
 "use client";
 
 import { useWallet as useSolanaWallet } from "@solana/wallet-adapter-react";
+import { useWallet as useSuiWallet } from "@suiet/wallet-kit";
 import {
-    Button,
-    List,
-    Modal
-}                                       from "flowbite-react";
-import Image                            from "next/image";
-import { useMemo }                      from "react";
+  Button,
+  List,
+  Modal
+} from "flowbite-react";
+import Image from "next/image";
+import { useMemo } from "react";
 import {
-    CHAIN_LOGO,
-    CHAIN_TYPE,
-    ChainTypeValue
-}                                       from "../consts/chain";
-import { useWalletModalContext }        from "../context/walletContext";
-import { useEVMClient }                 from "../hooks/useEVMClient";
-import { EVMWalletList }                from "./EVMConnectWalletList";
-import { SolanaConnectWalletDialog }    from "./SolanaConnectWalletList";
+  CHAIN_LOGO,
+  CHAIN_TYPE,
+  ChainTypeValue
+} from "../consts/chain";
+import { useWalletModalContext } from "../context/walletContext";
+import { useEVMClient } from "../hooks/useEVMClient";
+import { EVMWalletList } from "./EVMConnectWalletList";
+import { SolanaConnectWalletDialog } from "./SolanaConnectWalletList";
+import { SuiConnectWalletList } from "./SuiConnectWalletList";
 
 export const ToggleWalletModalBtn = ({
-                                         className,
-                                     }: any) => {
+    className,
+}: any) => {
     const walletContext                                                                 = useWalletModalContext();
     const {wallet: solanaWallet, publicKey, disconnect: disconnectSolana}               = useSolanaWallet();
     const {isConnected: evmIsConnected, address: evmAddress, disconnect: disconnectEVM} = useEVMClient();
-    
+  const suiWallet = useSuiWallet()
+
     const walletMeta = useMemo(() => ({
         [CHAIN_TYPE.SOLANA]: {
             isConnected: solanaWallet?.adapter?.connected,
@@ -36,7 +39,13 @@ export const ToggleWalletModalBtn = ({
             isConnected: evmIsConnected,
             address: evmAddress,
             disconnect: disconnectEVM,
-            icon: null
+            icon: CHAIN_LOGO[CHAIN_TYPE.EVM],
+        },
+        [CHAIN_TYPE.SUI]: {
+            isConnected: suiWallet.connected,
+            address: suiWallet.account?.address,
+            disconnect: suiWallet.disconnect,
+            icon: CHAIN_LOGO[CHAIN_TYPE.SUI]
         },
     }), [
         publicKey,
@@ -44,7 +53,8 @@ export const ToggleWalletModalBtn = ({
         disconnectSolana,
         evmIsConnected,
         evmAddress,
-        disconnectEVM
+        disconnectEVM,
+        suiWallet,
     ])
     
     const selectedWalletMeta = useMemo(() =>
@@ -127,6 +137,7 @@ export const WalletModal = () => {
     const MenuWalletList = {
         [CHAIN_TYPE.SOLANA]: SolanaConnectWalletDialog,
         [CHAIN_TYPE.EVM]: EVMWalletList,
+        [CHAIN_TYPE.SUI]: SuiConnectWalletList,
     }
     const RightMenu      = MenuWalletList[walletContext.walletChainType];
     
