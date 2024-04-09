@@ -1,199 +1,207 @@
 "use client";
 
 import {
-    CHAIN_ID_KLAYTN,
-    CHAIN_ID_POLYGON,
-    CHAIN_ID_SOLANA,
-    ChainId,
-    getEmitterAddressEth,
-    getEmitterAddressSolana,
-    hexToUint8Array,
-    parseSequenceFromLogEth,
-    parseSequenceFromLogSolana,
-    transferFromEth,
-    transferFromEthNative,
-    transferFromSolana,
-    transferNativeSol,
-    uint8ArrayToHex
+  CHAIN_ID_KLAYTN,
+  CHAIN_ID_POLYGON,
+  CHAIN_ID_SOLANA,
+  CHAIN_ID_SUI,
+  ChainId,
+  getEmitterAddressEth,
+  getEmitterAddressSolana,
+  hexToUint8Array,
+  parseSequenceFromLogEth,
+  parseSequenceFromLogSolana,
+  transferFromEth,
+  transferFromEthNative,
+  transferFromSolana,
+  transferFromSui,
+  transferNativeSol,
+  uint8ArrayToHex
 } from "@certusone/wormhole-sdk";
+import { getEmitterAddressAndSequenceFromResponseSui, getOriginalPackageId } from "@certusone/wormhole-sdk/lib/cjs/sui";
+import { SuiTransactionBlockResponse } from "@mysten/sui.js/client";
 import { WalletContextState } from '@solana/wallet-adapter-react';
 import { Connection } from "@solana/web3.js";
+import {
+  WalletContextState as WalletContextStateSui,
+} from "@suiet/wallet-kit";
 import { Signer } from "ethers";
 import { parseUnits, zeroPad } from "ethers/lib/utils";
 import { SOLANA_HOST, SOL_BRIDGE_ADDRESS, SOL_TOKEN_BRIDGE_ADDRESS, getBridgeAddressForChain, getTokenBridgeAddressForChain } from "./consts";
 import {
-    fetchSignedVAA,
-    handleError,
-    logTxResult,
-    maybeAdditionalPayload,
-    sleep
+  fetchSignedVAA,
+  handleError,
+  logTxResult,
+  maybeAdditionalPayload,
+  sleep
 } from "./helper/helpers";
 import { signSendAndConfirm } from './helper/solana';
+import { getSuiProvider } from "./helper/sui";
 
 export async function evm(
-    signer: Signer,
-    tokenAddress: string,
-    decimals: number,
-    amount: string,
-    recipientChain: ChainId,
-    recipientAddress: Uint8Array,
-    isNative: boolean,
-    chainId: ChainId,
-    relayerFee?: string
+  signer: Signer,
+  tokenAddress: string,
+  decimals: number,
+  amount: string,
+  recipientChain: ChainId,
+  recipientAddress: Uint8Array,
+  isNative: boolean,
+  chainId: ChainId,
+  relayerFee?: string
 ) {
-    try {
-        const baseAmountParsed = parseUnits(amount, decimals);
-        const feeParsed = parseUnits(relayerFee || "0", decimals);
-        const transferAmountParsed = baseAmountParsed.add(feeParsed);
-        const additionalPayload = maybeAdditionalPayload(
-            recipientChain,
-            recipientAddress,
-            chainId
-        );
-        // Klaytn requires specifying gasPrice
-        const overrides =
-            chainId === CHAIN_ID_KLAYTN
-                ? { gasPrice: (await signer.getGasPrice()).toString() }
-                : {};
-        const receipt = isNative
-            ? await transferFromEthNative(
-                getTokenBridgeAddressForChain(chainId),
-                signer,
-                transferAmountParsed,
-                recipientChain,
-                additionalPayload?.receivingContract || recipientAddress,
-                feeParsed,
-                overrides,
-                additionalPayload?.payload
-            )
-            : await transferFromEth(
-                getTokenBridgeAddressForChain(chainId),
-                signer,
-                tokenAddress,
-                transferAmountParsed,
-                recipientChain,
-                additionalPayload?.receivingContract || recipientAddress,
-                feeParsed,
-                overrides,
-                additionalPayload?.payload
-            );
+  try {
+    const baseAmountParsed = parseUnits(amount, decimals);
+    const feeParsed = parseUnits(relayerFee || "0", decimals);
+    const transferAmountParsed = baseAmountParsed.add(feeParsed);
+    const additionalPayload = maybeAdditionalPayload(
+      recipientChain,
+      recipientAddress,
+      chainId
+    );
+    // Klaytn requires specifying gasPrice
+    const overrides =
+      chainId === CHAIN_ID_KLAYTN
+        ? { gasPrice: (await signer.getGasPrice()).toString() }
+        : {};
+    const receipt = isNative
+      ? await transferFromEthNative(
+        getTokenBridgeAddressForChain(chainId),
+        signer,
+        transferAmountParsed,
+        recipientChain,
+        additionalPayload?.receivingContract || recipientAddress,
+        feeParsed,
+        overrides,
+        additionalPayload?.payload
+      )
+      : await transferFromEth(
+        getTokenBridgeAddressForChain(chainId),
+        signer,
+        tokenAddress,
+        transferAmountParsed,
+        recipientChain,
+        additionalPayload?.receivingContract || recipientAddress,
+        feeParsed,
+        overrides,
+        additionalPayload?.payload
+      );
 
-        logTxResult(receipt.transactionHash, receipt.blockNumber);
+    logTxResult(receipt.transactionHash, receipt.blockNumber);
 
-        const sequence = parseSequenceFromLogEth(
-            receipt,
-            getBridgeAddressForChain(chainId)
-        );
-        const emitterAddress = getEmitterAddressEth(
-            getTokenBridgeAddressForChain(chainId)
-        );
-        return await fetchSignedVAA(
-            chainId,
-            emitterAddress,
-            sequence
-        );
-    } catch (e) {
-        handleError(e);
-    }
+    const sequence = parseSequenceFromLogEth(
+      receipt,
+      getBridgeAddressForChain(chainId)
+    );
+    const emitterAddress = getEmitterAddressEth(
+      getTokenBridgeAddressForChain(chainId)
+    );
+    return await fetchSignedVAA(
+      chainId,
+      emitterAddress,
+      sequence
+    );
+  } catch (e) {
+    handleError(e);
+  }
 }
 
 export async function solana(
-    wallet: WalletContextState,
-    payerAddress: string, //TODO: we may not need this since we have wallet
-    fromAddress: string,
-    mintAddress: string,
-    amount: string,
-    decimals: number = 9,
-    targetChain: ChainId = CHAIN_ID_POLYGON,
-    targetAddress: Uint8Array = hexToUint8Array('000000000000000000000000522c534b011209e1b8e6e385204854db0ccda309'),
-    isNative: boolean = true,
-    originAddressStr: string = '069b8857feab8184fb687f634618c035dac439dc1aeb3b5598a0f00000000001',
-    originChain: ChainId = 1,
-    relayerFee?: string
+  wallet: WalletContextState,
+  payerAddress: string, //TODO: we may not need this since we have wallet
+  fromAddress: string,
+  mintAddress: string,
+  amount: string,
+  decimals: number = 9,
+  targetChain: ChainId = CHAIN_ID_POLYGON,
+  targetAddress: Uint8Array = hexToUint8Array('000000000000000000000000522c534b011209e1b8e6e385204854db0ccda309'),
+  isNative: boolean = true,
+  originAddressStr: string = '069b8857feab8184fb687f634618c035dac439dc1aeb3b5598a0f00000000001',
+  originChain: ChainId = 1,
+  relayerFee?: string
 ) {
-    mintAddress = 'So11111111111111111111111111111111111111112';
-    targetChain = CHAIN_ID_POLYGON;
-    decimals = 9;
-    targetAddress = hexToUint8Array('000000000000000000000000522c534b011209e1b8e6e385204854db0ccda309');
-    originAddressStr = '069b8857feab8184fb687f634618c035dac439dc1aeb3b5598a0f00000000001';
-    originChain = CHAIN_ID_SOLANA;
-    console.log('payerAddress', payerAddress);
-    console.log('fromAddress', fromAddress);
-    console.log('mintAddress', mintAddress);
-    console.log('amount', amount);
-    console.log('decimals', decimals);
-    console.log('targetChain', targetChain);
-    console.log('targetAddress', uint8ArrayToHex(targetAddress).toString());
-    console.log('isNative', isNative);
-    console.log('originAddressStr', originAddressStr);
-    console.log('originChain', originChain);
-    console.log('relayerFee', relayerFee);
-    console.log('IsSending', true);
-    try {
-        const connection = new Connection(SOLANA_HOST, "confirmed");
-        const baseAmountParsed = parseUnits(amount, decimals);
-        const feeParsed = parseUnits(relayerFee || "0", decimals);
-        const transferAmountParsed = baseAmountParsed.add(feeParsed);
-        const additionalPayload = maybeAdditionalPayload(
-            targetChain,
-            targetAddress,
-            originChain
-        );
-        const originAddress = originAddressStr
-            ? zeroPad(hexToUint8Array(originAddressStr), 32)
-            : undefined;
-        const promise = isNative
-            ? transferNativeSol(
-                connection,
-                SOL_BRIDGE_ADDRESS,
-                SOL_TOKEN_BRIDGE_ADDRESS,
-                payerAddress,
-                transferAmountParsed.toBigInt(),
-                additionalPayload?.receivingContract || targetAddress,
-                targetChain,
-                feeParsed.toBigInt(),
-                additionalPayload?.payload
-            )
-            : transferFromSolana(
-                connection,
-                SOL_BRIDGE_ADDRESS,
-                SOL_TOKEN_BRIDGE_ADDRESS,
-                payerAddress,
-                fromAddress,
-                mintAddress,
-                transferAmountParsed.toBigInt(),
-                additionalPayload?.receivingContract || targetAddress,
-                targetChain,
-                originAddress,
-                originChain,
-                undefined,
-                feeParsed.toBigInt(),
-                additionalPayload?.payload
-            );
-        const transaction = await promise;
-        const txid = await signSendAndConfirm(wallet, connection, transaction);
-        const info = await connection.getTransaction(txid);
-        if (!info) {
-            throw new Error("An error occurred while fetching the transaction info");
-        }
-
-        logTxResult(txid, info.slot);
-
-        const sequence = parseSequenceFromLogSolana(info);
-        const emitterAddress = await getEmitterAddressSolana(
-            SOL_TOKEN_BRIDGE_ADDRESS
-        );
-        console.log('sequence', sequence);
-        console.log('emitterAddress', emitterAddress);
-        await sleep(15000)
-        await fetchSignedVAA(
-            CHAIN_ID_SOLANA,
-            emitterAddress,
-            sequence,
-        );
-    } catch (e) {
-        handleError(e);
+  mintAddress = 'So11111111111111111111111111111111111111112';
+  targetChain = CHAIN_ID_POLYGON;
+  decimals = 9;
+  targetAddress = hexToUint8Array('000000000000000000000000522c534b011209e1b8e6e385204854db0ccda309');
+  originAddressStr = '069b8857feab8184fb687f634618c035dac439dc1aeb3b5598a0f00000000001';
+  originChain = CHAIN_ID_SOLANA;
+  console.log('payerAddress', payerAddress);
+  console.log('fromAddress', fromAddress);
+  console.log('mintAddress', mintAddress);
+  console.log('amount', amount);
+  console.log('decimals', decimals);
+  console.log('targetChain', targetChain);
+  console.log('targetAddress', uint8ArrayToHex(targetAddress).toString());
+  console.log('isNative', isNative);
+  console.log('originAddressStr', originAddressStr);
+  console.log('originChain', originChain);
+  console.log('relayerFee', relayerFee);
+  console.log('IsSending', true);
+  try {
+    const connection = new Connection(SOLANA_HOST, "confirmed");
+    const baseAmountParsed = parseUnits(amount, decimals);
+    const feeParsed = parseUnits(relayerFee || "0", decimals);
+    const transferAmountParsed = baseAmountParsed.add(feeParsed);
+    const additionalPayload = maybeAdditionalPayload(
+      targetChain,
+      targetAddress,
+      originChain
+    );
+    const originAddress = originAddressStr
+      ? zeroPad(hexToUint8Array(originAddressStr), 32)
+      : undefined;
+    const promise = isNative
+      ? transferNativeSol(
+        connection,
+        SOL_BRIDGE_ADDRESS,
+        SOL_TOKEN_BRIDGE_ADDRESS,
+        payerAddress,
+        transferAmountParsed.toBigInt(),
+        additionalPayload?.receivingContract || targetAddress,
+        targetChain,
+        feeParsed.toBigInt(),
+        additionalPayload?.payload
+      )
+      : transferFromSolana(
+        connection,
+        SOL_BRIDGE_ADDRESS,
+        SOL_TOKEN_BRIDGE_ADDRESS,
+        payerAddress,
+        fromAddress,
+        mintAddress,
+        transferAmountParsed.toBigInt(),
+        additionalPayload?.receivingContract || targetAddress,
+        targetChain,
+        originAddress,
+        originChain,
+        undefined,
+        feeParsed.toBigInt(),
+        additionalPayload?.payload
+      );
+    const transaction = await promise;
+    const txid = await signSendAndConfirm(wallet, connection, transaction);
+    const info = await connection.getTransaction(txid);
+    if (!info) {
+      throw new Error("An error occurred while fetching the transaction info");
     }
+
+    logTxResult(txid, info.slot);
+
+    const sequence = parseSequenceFromLogSolana(info);
+    const emitterAddress = await getEmitterAddressSolana(
+      SOL_TOKEN_BRIDGE_ADDRESS
+    );
+    console.log('sequence', sequence);
+    console.log('emitterAddress', emitterAddress);
+    await sleep(15000)
+    await fetchSignedVAA(
+      CHAIN_ID_SOLANA,
+      emitterAddress,
+      sequence,
+    );
+  } catch (e) {
+    handleError(e);
+  }
 }
 
 /**
@@ -704,81 +712,68 @@ export async function solana(
  }
  }
 
- async function sui(
- dispatch: any,
- enqueueSnackbar: any,
- wallet: WalletContextStateSui,
- asset: string,
- amount: string,
- decimals: number,
- targetChain: ChainId,
- targetAddress: Uint8Array,
- originChain?: ChainId,
- relayerFee?: string
- ) {
- dispatch(setIsSending(true));
- try {
- if (!wallet.address) {
- throw new Error("No wallet address");
- }
- const baseAmountParsed = parseUnits(amount, decimals);
- const feeParsed = parseUnits(relayerFee || "0", decimals);
- const transferAmountParsed = baseAmountParsed.add(feeParsed);
- const provider = getSuiProvider();
- // TODO: handle pagination
- const coins = (
- await provider.getCoins({
- owner: wallet.address,
- coinType: asset,
- })
- ).data;
- const tx = await transferFromSui(
- provider,
- getBridgeAddressForChain(CHAIN_ID_SUI),
- getTokenBridgeAddressForChain(CHAIN_ID_SUI),
- coins,
- asset,
- transferAmountParsed.toBigInt(),
- targetChain,
- targetAddress
- );
- const response = await wallet.signAndExecuteTransactionBlock({
- transactionBlock: tx,
- options: {
- showEvents: true,
- },
- });
- dispatch(
- setTransferTx({
- id: response.digest,
- block: Number(response.checkpoint || 0),
- })
- );
- enqueueSnackbar(null, {
- content: <Alert severity="success">Transaction confirmed</Alert>,
- });
- const coreBridgePackageId = await getOriginalPackageId(
- provider,
- getBridgeAddressForChain(CHAIN_ID_SUI)
- );
- if (!coreBridgePackageId)
- throw new Error("Unable to retrieve original package id");
- const { sequence, emitterAddress } =
- getEmitterAddressAndSequenceFromResponseSui(
- coreBridgePackageId,
- response
- );
- console.log(emitterAddress, sequence);
- await fetchSignedVAA(
- CHAIN_ID_SUI,
- emitterAddress,
- sequence,
- enqueueSnackbar,
- dispatch
- );
- } catch (e) {
- handleError(e, enqueueSnackbar, dispatch);
- }
- }
-
  */
+export async function sui(
+  wallet: WalletContextStateSui,
+  asset: string,
+  amount: string,
+  decimals: number,
+  targetChain: ChainId,
+  targetAddress: Uint8Array,
+  relayerFee?: string
+) {
+  console.log('isSending', true);
+  try {
+    if (!wallet.address) {
+      throw new Error("No wallet address");
+    }
+    const baseAmountParsed = parseUnits(amount, decimals);
+    const feeParsed = parseUnits(relayerFee || "0", decimals);
+    const transferAmountParsed = baseAmountParsed.add(feeParsed);
+    const provider = getSuiProvider();
+    // TODO: handle pagination
+    const coins = (
+      await provider.getCoins({
+        owner: wallet.address,
+        coinType: asset,
+      })
+    ).data;
+    const tx = await transferFromSui(
+      provider,
+      getBridgeAddressForChain(CHAIN_ID_SUI),
+      getTokenBridgeAddressForChain(CHAIN_ID_SUI),
+      coins,
+      asset,
+      transferAmountParsed.toBigInt(),
+      targetChain,
+      targetAddress
+    );
+    const response = await wallet.signAndExecuteTransactionBlock({
+      transactionBlock: tx,
+      options: {
+        showEvents: true,
+      },
+    }) as SuiTransactionBlockResponse;
+    logTxResult(response.digest, Number(response.checkpoint || 0))
+
+    const coreBridgePackageId = await getOriginalPackageId(
+      provider,
+      getBridgeAddressForChain(CHAIN_ID_SUI)
+    );
+    if (!coreBridgePackageId)
+      throw new Error("Unable to retrieve original package id");
+    const { sequence, emitterAddress } =
+      getEmitterAddressAndSequenceFromResponseSui(
+        coreBridgePackageId,
+        response
+      );
+    
+    return await fetchSignedVAA(
+      CHAIN_ID_SUI,
+      emitterAddress,
+      sequence
+    );
+  } catch (e) {
+    handleError(e);
+  }
+}

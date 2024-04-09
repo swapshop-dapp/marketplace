@@ -1,12 +1,16 @@
 "use client";
 
 import {
-    CHAIN_ID_SOLANA,
-    ChainId,
-    isEVMChain
+  CHAIN_ID_SOLANA,
+  CHAIN_ID_SUI,
+  ChainId,
+  isEVMChain
 } from "@certusone/wormhole-sdk";
+import {
+  WalletContextState as WalletContextStateSui,
+} from "@suiet/wallet-kit";
 import { evm as evmRedeem, solana as solanaRedeem } from './redeemHandler';
-import { evm as evmTransfer, solana as solanaTransfer } from './transferHandler';
+import { evm as evmTransfer, solana as solanaTransfer, sui } from './transferHandler';
 
 type HandleTransfer = {
     sourceChain: ChainId;
@@ -25,6 +29,9 @@ type HandleTransfer = {
     evmSigner?: any;
     solanaSigner?: any,
     solanaPubKey?: string,
+
+    /// sui wallet
+  suiWallet: WalletContextStateSui
 }
 
 export const handleTransfer = ({
@@ -41,6 +48,7 @@ export const handleTransfer = ({
     solanaSigner,
     solanaPubKey,
     originAsset,
+    suiWallet,
 }: HandleTransfer) => {
     if (
         isEVMChain(sourceChain) &&
@@ -223,26 +231,24 @@ export const handleTransfer = ({
         //     originChain,
         //     relayerFee
         //   );
-        // } else if (
-        //   sourceChain === CHAIN_ID_SUI &&
-        //   suiWallet.connected &&
-        //   suiWallet.address &&
-        //   !!sourceAsset &&
-        //   decimals !== undefined &&
-        //   !!targetAddress
-        // ) {
-        //   sui(
-        //     dispatch,
-        //     enqueueSnackbar,
-        //     suiWallet,
-        //     sourceAsset,
-        //     amount,
-        //     decimals,
-        //     targetChain,
-        //     targetAddress,
-        //     originChain,
-        //     relayerFee
-        //   );
+        } else if (
+          sourceChain === CHAIN_ID_SUI &&
+          suiWallet.connected &&
+          suiWallet.address &&
+          !!sourceAsset &&
+          decimals !== undefined &&
+          !!targetAddress
+        ) {
+          sui(
+            suiWallet,
+            sourceAsset,
+            amount,
+            decimals,
+            targetChain,
+            targetAddress,
+            relayerFee
+          );
+        
     }
 };
 

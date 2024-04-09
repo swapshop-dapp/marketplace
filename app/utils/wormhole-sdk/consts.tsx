@@ -1,8 +1,8 @@
 "use client";
 
 import { CHAIN_ID_POLYGON, CONTRACTS, ChainId, coalesceChainName } from "@certusone/wormhole-sdk";
+import { mainnetConnection, testnetConnection } from "@mysten/sui.js";
 import { clusterApiUrl } from "@solana/web3.js";
-
 
 export type WORMHOLE_CONTRACT_KEYS = keyof typeof CONTRACTS;
 export type WORMHOLE_CONTRACT_VAUES = typeof CONTRACTS[WORMHOLE_CONTRACT_KEYS];
@@ -54,3 +54,10 @@ export const getBridgeAddressForChain = (chainId: ChainId) =>
     CONTRACTS[CLUSTER][
         coalesceChainName(chainId)
         ].core || "";
+
+
+export const SUI_CONNECTION =
+  CLUSTER === NETWORKS.TESTNET ? testnetConnection : mainnetConnection;
+
+export const SUI_NATIVE_DECIMALS = 9;
+export const SUI_NATIVE_TOKEN_KEY = "0x2::sui::SUI";

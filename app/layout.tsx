@@ -12,6 +12,7 @@ import { EVMWalletModal } from './components/EVMWalletModal';
 import { WalletModal } from './components/WalletModal';
 import { wagmiConfig } from './consts/wagmiConfig';
 import { SolanaWalletContext } from './context/SolanaWalletContext';
+import { SuiWalletProvider } from './context/SuiWalletContext';
 import { WalletModalProvider } from './context/walletContext';
 import "./globals.css";
 
@@ -34,15 +35,17 @@ export default function RootLayout({
           <WalletModalProvider>
             <WagmiConfig config={wagmiConfig}>
               <SolanaWalletContext>
-                <Flowbite theme={{mode: 'dark', theme: themes}}>
-                    <WalletModal />
-                    <Header>
-                        <Navigator></Navigator>
-                    </Header>
-                    {children}
-                    <GFooter></GFooter>
-                </Flowbite>
-              </SolanaWalletContext>
+                  <SuiWalletProvider>
+                    <Flowbite theme={{mode: 'dark', theme: themes}}>
+                        <WalletModal />
+                        <Header>
+                            <Navigator></Navigator>
+                        </Header>
+                        {children}
+                        <GFooter></GFooter>
+                    </Flowbite>
+                  </SuiWalletProvider>
+                </SolanaWalletContext>
             </WagmiConfig>
             <EVMWalletModal />
           </WalletModalProvider>
