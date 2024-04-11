@@ -12,8 +12,9 @@ import { EVMWalletModal } from './components/EVMWalletModal';
 import { WalletModal } from './components/WalletModal';
 import { wagmiConfig } from './consts/wagmiConfig';
 import { SolanaWalletContext } from './context/SolanaWalletContext';
-import { WalletModalProvider } from './context/walletContext';
+import { WalletModalProvider } from './context/WalletContext';
 import "./globals.css";
+import { CommonContextProvider } from './context/CommonContext';
 
 export const metadata: Metadata = {
     title: "GoSwapShop",
@@ -39,7 +40,9 @@ export default function RootLayout({
                     <Header>
                         <Navigator></Navigator>
                     </Header>
-                    {children}
+                    <CommonContextProvider>
+                      {children}
+                    </CommonContextProvider>
                     <GFooter></GFooter>
                 </Flowbite>
               </SolanaWalletContext>

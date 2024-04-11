@@ -13,7 +13,7 @@ import {
     CHAIN_TYPE,
     ChainTypeValue
 }                                       from "../consts/chain";
-import { useWalletModalContext }        from "../context/walletContext";
+import { useWalletModalContext }        from "../context/WalletContext";
 import { useEVMClient }                 from "../hooks/useEVMClient";
 import { EVMWalletList }                from "./EVMConnectWalletList";
 import { SolanaConnectWalletDialog }    from "./SolanaConnectWalletList";
