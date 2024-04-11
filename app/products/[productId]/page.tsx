@@ -1,8 +1,9 @@
 "use client"
+import { BaseImage } from '@/app/components/BaseImage';
 import { useEVMClient } from '@/app/hooks/useEVMClient';
 import { GCarousel } from '@app/components/Carousel';
 import { GRating } from '@app/components/GRating';
-import { handleRedeem, handleTransfer } from "@app/utils/wormhole-sdk";
+import { handleTransfer } from "@app/utils/wormhole-sdk";
 import { CHAIN_ID_POLYGON, CHAIN_ID_SOLANA, hexToUint8Array } from '@certusone/wormhole-sdk';
 import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
 import axios from 'axios';
@@ -37,21 +38,17 @@ export default function ProductDetail() {
     }, [ id ]);
     return (
         <div className={'min-h-screen py-20'}>
-            <div className={'grid grid-cols-2 gap-10'}>
+            <div className={'grid grid-cols-1 md:grid-cols-2 gap-10 px-5'}>
                 <GCarousel images={product.images || []}></GCarousel>
                 <div className={'text-4xl text-white'}>
-                    <h5 className="text-lg font-semibold tracking-tight text-gray-900 dark:text-white">
+                    <h5 className="text-lg font-semibold tracking-tight text-gray-900 mb-3 dark:text-white">
                         {product.title}
                     </h5>
-                    <div className="flex flex-col items-start justify-center md:gap-4">
+                    <div className="flex flex-col items-start justify-center mb-3 md:gap-4">
                         <div className={'flex gap-1'}>
-                            <img src="https://static.goswapshop.com/assets/usdc.svg" alt="" width={24}/>
+                            <BaseImage src="https://static.goswapshop.com/assets/usdc.svg" alt="" width={24}/>
                             <span className="text-3xl font-bold text-gray-900 dark:text-white">{product.price} </span>
                             <span className={'self-center align-middle text-xl'}>(${product.price})</span>
-                        </div>
-                        <div className='flex'>
-                            <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png" alt="" width={35} className='mr-1 rounded-full'  />
-                            <span className="text-3xl font-bold text-gray-900 dark:text-white">{(product.price / SOL_PRICE).toFixed(3)} </span>                            
                         </div>
                     </div>
                     <Button
@@ -70,39 +67,30 @@ export default function ProductDetail() {
                         }}
                     >Place An Order</Button>
                     
-                    <div className={'flex md:mt-4 '}>
-                        <div className={'grid grid-cols-2 gap-4'}>
-                            <Avatar img="https://static.goswapshop.com/images/people/profile-picture-5.jpg" rounded
-                                    bordered
-                                    status="online" statusPosition="bottom-right">
-                                <div className="space-y-1 font-medium dark:text-white">
-                                    <div className={'text-xl'}>Yang</div>
-                                </div>
-                                <div className={'grid grid-cols-2 justify-between gap-2'}>
-                                    <GRating></GRating>
-                                    <span className="text-sm text-gray-600 dark:text-gray-400">(91 reviews)</span>
-                                </div>
-                            </Avatar>
-                            <div className={'items-end justify-end'}>
-                                <div className={'gap-1'}>
-                                        <span
-                                            className="items-end justify-end align-middle text-sm text-gray-600 dark:text-gray-400">12 hours ago</span>
-                                </div>
-                                <div className={'flex items-center justify-around gap-1 align-middle text-white'}>
-                                    <div className={'flex items-center gap-1 align-middle'}>
-                                        <FaSafari size={16}/>
-                                        <span className={'text-lg'}>Long Bien, Hanoi</span>
-                                    </div>
-                                    <span className={'text-sm'}>about 4km from you</span>
-                                </div>
+                    <div className={'flex flex-wrap md:mt-4 gap-5'}>
+                        <Avatar img="https://static.goswapshop.com/images/people/profile-picture-5.jpg" rounded
+                                bordered
+                                status="online" statusPosition="bottom-right">
+                            <div className="space-y-1 font-medium dark:text-white">
+                                <div className={'text-xl'}>Yang</div>
                             </div>
-                            {/*<div>*/}
-                            {/*    <span className="text-sm text-gray-600 dark:text-gray-400">12 hours ago</span>*/}
-                            {/*    <div className={'flex gap-1 text-white items-center'}>*/}
-                            {/*        <FaSafari size={19}/>*/}
-                            {/*        <span>Hanoi</span>*/}
-                            {/*    </div>*/}
-                            {/*</div>*/}
+                            <div className={'flex flex-wrap justify-between gap-2'}>
+                                <GRating></GRating>
+                                <span className="text-sm text-gray-600 dark:text-gray-400">(91 reviews)</span>
+                            </div>
+                        </Avatar>
+                        <div>
+                            <div className={'gap-1'}>
+                                    <span
+                                        className="items-end justify-end align-middle text-sm text-gray-600 dark:text-gray-400">12 hours ago</span>
+                            </div>
+                            <div className={'flex flex-wrap gap-1 items-center text-white'}>
+                                <div className={'flex items-center gap-1'}>
+                                    <FaSafari size={16}/>
+                                    <span className={'text-lg'}>Long Bien, Hanoi</span>
+                                </div>
+                                <span className={'text-sm'}>about 4km from you</span>
+                            </div>
                         </div>
                     </div>
                     <div>

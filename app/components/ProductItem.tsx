@@ -4,6 +4,7 @@ import {
     Rating
 } from "flowbite-react";
 import { FaSafari } from 'react-icons/fa6';
+import { BaseImage } from "./BaseImage";
 
 // @ts-ignore
 export const ProductItem = ({product}) => {
@@ -13,16 +14,16 @@ export const ProductItem = ({product}) => {
     
     return (
         <Card
-            className="max-h-sm max-w-sm hover:cursor-pointer"
-            renderImage={() => <img
-                src={product.images[0]}
-                className={'!h-[345px]'}
-                alt="Apple Watch Series 7 in colors pink, silver, and black"
-            />}
+            className="max-h-sm hover:cursor-pointer"
             onClick={handleClick}
         >
-            
-            <div className="mb-2 mt-0.5 flex items-center justify-between">
+            <div className={'!h-[300px]'}>
+                <BaseImage
+                    src={product.images[0]}
+                    alt={product.title}
+                /> 
+            </div>
+            <div className="mb-2 mt-0.5 flex gap-2 justify-between items-center flex-wrap">
                 {/* eslint-disable-next-line react/jsx-no-undef */}
                 <div className={'flex flex-col'}>
                     <Avatar img="https://static.goswapshop.com/images/people/profile-picture-5.jpg" rounded bordered

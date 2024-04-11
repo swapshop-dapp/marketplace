@@ -17,6 +17,7 @@ import { useWalletModalContext }        from "../context/WalletContext";
 import { useEVMClient }                 from "../hooks/useEVMClient";
 import { EVMWalletList }                from "./EVMConnectWalletList";
 import { SolanaConnectWalletDialog }    from "./SolanaConnectWalletList";
+import { Center } from "./Center";
 
 export const ToggleWalletModalBtn = ({
                                          className,
@@ -73,8 +74,10 @@ export const ToggleWalletModalBtn = ({
                     <></>
                 )
             }
-            Disconnect {selectedWalletMeta?.address?.substring(0, is0x ? 6 : 3)}...
-            {selectedWalletMeta?.address?.substring(selectedWalletMeta?.address?.length - (is0x ? 4 : 3))}
+            <Center>
+                Disconnect {selectedWalletMeta?.address?.substring(0, is0x ? 6 : 3)}...
+                {selectedWalletMeta?.address?.substring(selectedWalletMeta?.address?.length - (is0x ? 4 : 3))}
+            </Center>
         </Button>
     ) : (
         <Button
@@ -82,7 +85,7 @@ export const ToggleWalletModalBtn = ({
             type="button"
             onClick={() => walletContext.setIsOpen(true)}
         >
-            Connect Wallet
+            <Center>Connect Wallet</Center>
         </Button>
     )
 }
@@ -94,9 +97,9 @@ const LeftMenu = ({
 }) => {
     const _onClick = onClick ? onClick : () => {
     };
-    
+
     return (
-        <List unstyled className="flex flex-col gap-3 border-r-2 pr-4">
+        <List unstyled className="flex flex-row md:flex-col justify-evenly items-center gap-3 border-b-2 md:border-b-0 md:border-r-2 pb-4 md:pr-4 overflow-auto">
             {
                 Object.values(CHAIN_TYPE).map((chain) => {
                     return (
@@ -128,24 +131,26 @@ export const WalletModal = () => {
         [CHAIN_TYPE.SOLANA]: SolanaConnectWalletDialog,
         [CHAIN_TYPE.EVM]: EVMWalletList,
     }
-    const RightMenu      = MenuWalletList[walletContext.walletChainType];
+    const RightMenuContent      = MenuWalletList[walletContext.walletChainType];
     
     return (
         <Modal show={walletContext.isOpen} onClose={() => walletContext.setIsOpen(false)}>
             <Modal.Header></Modal.Header>
             <Modal.Body>
-                <div className="flex flex-wrap">
+                <div className="flex flex-wrap flex-col md:flex-row">
                     <LeftMenu
                         onClick={(chain: ChainTypeValue) => {
                             walletContext.setWalletChainType(chain)
                         }}
                     />
-                    <RightMenu
-                        onClose={() => {
-                            walletContext.setSelectedWalletChainType(walletContext.walletChainType)
-                            walletContext.setIsOpen(false)
-                        }}
-                    />
+                    <div className="mt-5 md:mt-0">
+                        <RightMenuContent
+                            onClose={() => {
+                                walletContext.setSelectedWalletChainType(walletContext.walletChainType)
+                                walletContext.setIsOpen(false)
+                            }}
+                        />
+                    </div>
                 </div>
             </Modal.Body>
         </Modal>

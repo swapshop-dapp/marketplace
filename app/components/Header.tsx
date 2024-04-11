@@ -23,7 +23,7 @@ export const Header: React.FC<ComponentProps<any>> = ({children}) => {
                 <Navbar.Toggle className={"btn-goswapshop-bg text-white"}/>
             </div>
             <Navbar.Collapse>
-                <div className={'flex justify-between'}>
+                <div className={'flex flex-col justify-between gap-5 md:flex-row'}>
                     <div className={'flex justify-between gap-3'}>
                         <Navbar.Link href="/" active className={'text-lg'}>
                             For You
@@ -34,7 +34,7 @@ export const Header: React.FC<ComponentProps<any>> = ({children}) => {
                     </div>
 
                 <ToggleWalletModalBtn 
-                  className={"mr-32 md:absolute md:right-1"} 
+                  className={"mr-32 md:absolute md:right-1 w-full md:w-auto"} 
                 />
                 </div>
             </Navbar.Collapse>

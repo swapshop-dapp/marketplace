@@ -4,8 +4,8 @@ import { ListGroup } from "flowbite-react";
 
 export function Categories() {
     return (
-        <div className="flex max-md:invisible justify-center">
-            <ListGroup className="flex w-screen rounded-none text-xl">
+        <div className="flex justify-center">
+            <ListGroup className="flex flex-wrap rounded-none text-xl">
                 <ListGroup.Item>
                     All
                 </ListGroup.Item>

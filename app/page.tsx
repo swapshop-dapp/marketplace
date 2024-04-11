@@ -22,7 +22,7 @@ export default function Home({}) {
     return (
         <div>
             <HeroSection></HeroSection>
-            <section className={'h-1'}>
+            <section>
                 <Categories></Categories>
             </section>
             <main className="mt-20 flex flex-col bg-gray-800">
