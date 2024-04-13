@@ -19,10 +19,19 @@ export const useEVMClient = () => {
         handleError(data.name);
         },
     });
-    const { isConnected, address } = useAccount();
+    const { isConnected, address, } = useAccount();
     const client = typeof window !== "undefined" && typeof window.ethereum !== 'undefined' ?
       new ethers.providers.Web3Provider(window.ethereum) : null;
     const signer = client?.getSigner();
+
+    const signMessage = async (msg: string): Promise<string | undefined> => {
+        if (!isConnected) return;
+    
+        return await window.ethereum.request({
+            method: "personal_sign",
+            params: [msg, address],
+        });
+    }
 
     return {
         disconnect,
@@ -30,5 +39,6 @@ export const useEVMClient = () => {
         address,
         signer: signer,
         client: client,
+        signMessage,
     }
 }

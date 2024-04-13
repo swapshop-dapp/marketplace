@@ -1,73 +1,46 @@
 "use client";
 
-import { useWallet as useSolanaWallet } from "@solana/wallet-adapter-react";
 import {
     Button,
     List,
     Modal
 }                                       from "flowbite-react";
 import Image                            from "next/image";
-import { useMemo }                      from "react";
 import {
     CHAIN_LOGO,
     CHAIN_TYPE,
     ChainTypeValue
 }                                       from "../consts/chain";
 import { useWalletModalContext }        from "../context/WalletContext";
-import { useEVMClient }                 from "../hooks/useEVMClient";
 import { EVMWalletList }                from "./EVMConnectWalletList";
 import { SolanaConnectWalletDialog }    from "./SolanaConnectWalletList";
 import { Center } from "./Center";
 
 export const ToggleWalletModalBtn = ({
-                                         className,
-                                     }: any) => {
-    const walletContext                                                                 = useWalletModalContext();
-    const {wallet: solanaWallet, publicKey, disconnect: disconnectSolana}               = useSolanaWallet();
-    const {isConnected: evmIsConnected, address: evmAddress, disconnect: disconnectEVM} = useEVMClient();
+    className,
+}: any) => {
+    const walletContext = useWalletModalContext();
+    const selectedWalletMetadata = walletContext.selectedWalletMetadata;
+    const is0x = selectedWalletMetadata?.address?.startsWith("0x");
     
-    const walletMeta = useMemo(() => ({
-        [CHAIN_TYPE.SOLANA]: {
-            isConnected: solanaWallet?.adapter?.connected,
-            address: publicKey?.toString(),
-            disconnect: disconnectSolana,
-            icon: solanaWallet?.adapter.icon as any
-        },
-        [CHAIN_TYPE.EVM]: {
-            isConnected: evmIsConnected,
-            address: evmAddress,
-            disconnect: disconnectEVM,
-            icon: null
-        },
-    }), [
-        publicKey,
-        solanaWallet,
-        disconnectSolana,
-        evmIsConnected,
-        evmAddress,
-        disconnectEVM
-    ])
-    
-    const selectedWalletMeta = useMemo(() =>
-            walletMeta[walletContext.selectedWalletChainType],
-        [ walletContext.selectedWalletChainType, walletMeta ]
-    )
-    const is0x               = selectedWalletMeta?.address?.startsWith("0x");
-    
-    return selectedWalletMeta.isConnected ? (
+    return selectedWalletMetadata?.isConnected && walletContext?.userData?.address ? (
         <Button
-            onClick={selectedWalletMeta.disconnect}
+            onClick={() => {
+                walletContext.setUserData(undefined);
+                walletContext.setSelectedWalletChainType(undefined);
+                selectedWalletMetadata?.disconnect();
+            }}
             className={`btn-goswapshop-bg-secondary ${className}`}
             color='gray'
         >
             {
-                selectedWalletMeta.icon ? (
+                selectedWalletMetadata?.icon ? (
                     <Image
                         loading="lazy"
                         width={20}
                         height={20}
-                        src={selectedWalletMeta.icon}
-                        alt={walletContext.selectedWalletChainType}
+                        src={selectedWalletMetadata?.icon}
+                        alt={walletContext?.selectedWalletChainType || ""}
                         className="mr-1"
                     />
                 ) : (
@@ -75,15 +48,17 @@ export const ToggleWalletModalBtn = ({
                 )
             }
             <Center>
-                Disconnect {selectedWalletMeta?.address?.substring(0, is0x ? 6 : 3)}...
-                {selectedWalletMeta?.address?.substring(selectedWalletMeta?.address?.length - (is0x ? 4 : 3))}
+                Disconnect {walletContext.userData?.address?.substring(0, is0x ? 6 : 3)}...
+                {walletContext.userData?.address?.substring(walletContext.userData?.address?.length - (is0x ? 4 : 3))}
             </Center>
         </Button>
     ) : (
         <Button
             className={className}
             type="button"
-            onClick={() => walletContext.setIsOpen(true)}
+            onClick={() => {
+                walletContext.setIsOpen(true);
+            }}
         >
             <Center>Connect Wallet</Center>
         </Button>
@@ -132,6 +107,8 @@ export const WalletModal = () => {
         [CHAIN_TYPE.EVM]: EVMWalletList,
     }
     const RightMenuContent      = MenuWalletList[walletContext.walletChainType];
+    
+  console.log(walletContext.isOpen);
     
     return (
         <Modal show={walletContext.isOpen} onClose={() => walletContext.setIsOpen(false)}>

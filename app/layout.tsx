@@ -32,23 +32,23 @@ export default function RootLayout({
             <ThemeModeScript/>
         </head>
         <body className={'w-screen p-1 md:px-32'}>
-          <WalletModalProvider>
             <WagmiConfig config={wagmiConfig}>
-              <SolanaWalletContext>
-                <Flowbite theme={{mode: 'dark', theme: themes}}>
-                    <WalletModal />
-                    <Header>
-                        <Navigator></Navigator>
-                    </Header>
-                    <CommonContextProvider>
-                      {children}
-                    </CommonContextProvider>
-                    <GFooter></GFooter>
-                </Flowbite>
-              </SolanaWalletContext>
+                <SolanaWalletContext>
+                    <Flowbite theme={{mode: 'dark', theme: themes}}>
+                        <WalletModalProvider>
+                            <CommonContextProvider>
+                                <WalletModal />
+                                <Header>
+                                    <Navigator></Navigator>
+                                </Header>
+                                {children}
+                                <GFooter></GFooter>
+                            </CommonContextProvider>
+                        </WalletModalProvider>
+                    </Flowbite>
+                </SolanaWalletContext>
             </WagmiConfig>
             <EVMWalletModal />
-          </WalletModalProvider>
         </body>
         </html>
     );

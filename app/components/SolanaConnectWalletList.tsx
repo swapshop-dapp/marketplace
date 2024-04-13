@@ -8,9 +8,9 @@ import { WalletListItem } from "./WalletListItem";
 
 
 const DetectedWalletListItem = ({
-  wallet,
-  select,
-  onClose,
+    wallet,
+    select,
+    onClose,
 }: {
   wallet: Wallet;
   select: (walletName: WalletName) => void;
