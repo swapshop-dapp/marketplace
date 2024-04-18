@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode, createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { CHAIN_TYPE, ChainTypeValue } from "../consts/chain";
+import { CHAIN_TYPE, WalletModalChainTypeValue } from "../consts/chain";
 import { useWallet as useSolanaWallet } from "@solana/wallet-adapter-react";
 import { useEVMClient } from "../hooks/useEVMClient";
 import { TODO } from "../consts/type";
@@ -21,12 +21,12 @@ type DefaultWalletContext = {
     setIsOpen: (isOpen: boolean) => void;
     step: CONNECT_WALLET_STEP;
     setStep: (step: CONNECT_WALLET_STEP) => void;
-    walletChainType: ChainTypeValue;
-    setWalletChainType: (type: ChainTypeValue) => void;
+    walletChainType: WalletModalChainTypeValue;
+    setWalletChainType: (type: WalletModalChainTypeValue) => void;
     isLoggedIn: boolean;
     setIsLoggedIn: (isLoggedIn: boolean) => void;
-    selectedWalletChainType: ChainTypeValue | undefined;
-    setSelectedWalletChainType: (type: ChainTypeValue | undefined) => void;
+    selectedWalletChainType: WalletModalChainTypeValue | undefined;
+    setSelectedWalletChainType: (type: WalletModalChainTypeValue | undefined) => void;
     walletMetadata: Record<any, WalletMetadata>;
     selectedWalletMetadata: WalletMetadata | undefined;
     userData: TODO;
@@ -39,11 +39,11 @@ const defaultValue: DefaultWalletContext = {
   step: "CHOOSE_A_NETWORK",
   setStep: (_step: CONNECT_WALLET_STEP) => { },
   walletChainType: CHAIN_TYPE.SOLANA,
-  setWalletChainType: (_type: ChainTypeValue) => {},
+  setWalletChainType: (_type: WalletModalChainTypeValue) => {},
   isLoggedIn: false,
   setIsLoggedIn: (_isLoggedIn: boolean) => {},
   selectedWalletChainType: undefined,
-  setSelectedWalletChainType: (_type: ChainTypeValue | undefined) => { },
+  setSelectedWalletChainType: (_type: WalletModalChainTypeValue | undefined) => { },
   walletMetadata: {},
   selectedWalletMetadata: undefined,
   userData: undefined,
@@ -63,11 +63,11 @@ export const WalletModalProvider = ({
   const [step, setGlobalStep] = useState<CONNECT_WALLET_STEP>(defaultValue.step as CONNECT_WALLET_STEP);
   const setStep = useCallback((_step: CONNECT_WALLET_STEP) => { setGlobalStep(_step)}, [])
 
-  const [walletChainType, setGlobalWalletChainType] = useState<ChainTypeValue>(defaultValue.walletChainType)
-  const setWalletChainType = useCallback((_type: ChainTypeValue) => { setGlobalWalletChainType(_type as ChainTypeValue)}, [])
+  const [walletChainType, setGlobalWalletChainType] = useState<WalletModalChainTypeValue>(defaultValue.walletChainType)
+  const setWalletChainType = useCallback((_type: WalletModalChainTypeValue) => { setGlobalWalletChainType(_type as WalletModalChainTypeValue)}, [])
 
   const [selectedWalletChainType, setGlobalSelectedWalletChainType] = useState<DefaultWalletContext['selectedWalletChainType']>(undefined)
-  const setSelectedWalletChainType = useCallback((_type: ChainTypeValue | undefined) => { setGlobalSelectedWalletChainType(_type as ChainTypeValue) }, [])
+  const setSelectedWalletChainType = useCallback((_type: WalletModalChainTypeValue | undefined) => { setGlobalSelectedWalletChainType(_type as WalletModalChainTypeValue) }, [])
 
   const [isLoggedIn, setGlobalIsLoggedIn] = useState<boolean>(defaultValue.isLoggedIn)
   const setIsLoggedIn = useCallback((_isLoggedIn: boolean) => { setGlobalIsLoggedIn(_isLoggedIn) }, [])
@@ -137,6 +137,7 @@ See privacy and policy at ${window.location.host}/privacy-policy
         async function init() {
             const signature = await selectedWalletMetadata?.signMsg();
             console.log(signature);
+            setIsLoggedIn(true);
             setUserData({ address: selectedWalletMetadata?.address });
         }
         if (
@@ -152,6 +153,7 @@ See privacy and policy at ${window.location.host}/privacy-policy
         selectedWalletMetadata,
         userData,
         setUserData,
+        setIsLoggedIn,
     ])
 
   return (

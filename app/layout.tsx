@@ -31,7 +31,7 @@ export default function RootLayout({
         <head>
             <ThemeModeScript/>
         </head>
-        <body className={'w-screen p-1 md:px-32'}>
+        <body className={'p-1 md:px-32'}>
             <WagmiConfig config={wagmiConfig}>
                 <SolanaWalletContext>
                     <Flowbite theme={{mode: 'dark', theme: themes}}>

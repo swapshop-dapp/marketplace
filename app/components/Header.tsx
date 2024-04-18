@@ -7,8 +7,10 @@ import {
 import Image from "next/image";
 import { ComponentProps } from 'react';
 import { ToggleWalletModalBtn } from "./WalletModal";
+import { useWalletModalContext } from "../context/WalletContext";
 
 export const Header: React.FC<ComponentProps<any>> = ({children}) => {
+    const wContext = useWalletModalContext() 
     return (
         <Navbar fluid rounded className={'mb-5'}>
             <Navbar.Brand href="/" className={'justify-center'}>
@@ -17,7 +19,7 @@ export const Header: React.FC<ComponentProps<any>> = ({children}) => {
                   width={100}
                   height={40}
                  src="https://static.goswapshop.com/logo.svg" className="mr-3 h-6 sm:h-9"
-                     alt="Flowbite React Logo"/>
+                     alt="GoSwapShop"/>
             </Navbar.Brand>
             <div className="flex md:order-2">
                 <Navbar.Toggle className={"btn-goswapshop-bg text-white"}/>
@@ -31,10 +33,19 @@ export const Header: React.FC<ComponentProps<any>> = ({children}) => {
                         <Tooltip content={'Coming soon'}>
                             <Navbar.Link href="/" className={'text-lg'} disabled={true}>Nearby</Navbar.Link>
                         </Tooltip>
+                        {
+                            wContext.isLoggedIn ? (
+                                <Navbar.Link href="/transaction-history" active className={'text-lg'}>
+                                  Transactions
+                                </Navbar.Link>
+                            ) : (
+                                <></>
+                            )
+                        }
                     </div>
 
                 <ToggleWalletModalBtn 
-                  className={"mr-32 md:absolute md:right-1 w-full md:w-auto"} 
+                  className={"mr-32 w-full md:absolute md:right-1 md:w-auto"} 
                 />
                 </div>
             </Navbar.Collapse>

@@ -3,11 +3,20 @@
 import ethIcon from '../assets/images/svg/eth.svg';
 import polygonIcon from '../assets/images/svg/polygon.svg';
 import solanaIcon from '../assets/images/svg/solana.svg';
+import moonBeamIcon from '../assets/images/svg/moonbeam.svg';
 
 export type ChainId = number;
+export const WALLET_MODAL_CHAIN_TYPE = {
+    SOLANA: 'SOLANA',
+    EVM: 'EVM',
+    // SUI: 'SUI'
+} as const;
+export type WalletModalChainTypeKey = keyof typeof WALLET_MODAL_CHAIN_TYPE;
+export type WalletModalChainTypeValue = typeof WALLET_MODAL_CHAIN_TYPE[WalletModalChainTypeKey];
 export const CHAIN_TYPE = {
   SOLANA: 'SOLANA',
   EVM: 'EVM',
+  MOONBEAM: 'MOONBEAM',
   // SUI: 'SUI'
 } as const;
 export type ChainTypeKey = keyof typeof CHAIN_TYPE;
@@ -22,6 +31,7 @@ export interface ChainInfo {
 export const CHAIN_LOGO = {
   [CHAIN_TYPE.EVM]: ethIcon,
   [CHAIN_TYPE.SOLANA]: solanaIcon,
+  [CHAIN_TYPE.MOONBEAM]: moonBeamIcon,
 }
 
 export const CHAIN_ID_UNSET = 0;

@@ -14,10 +14,10 @@ export const ProductItem = ({product}) => {
     
     return (
         <Card
-            className="max-h-sm hover:cursor-pointer"
+            className="max-h-sm hover:cursor-pointer w-full"
             onClick={handleClick}
         >
-            <div className={'!h-[300px]'}>
+            <div className={'!h-[300px] w-full'}>
                 <BaseImage
                     src={product.images[0]}
                     alt={product.title}

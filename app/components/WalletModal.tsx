@@ -9,7 +9,8 @@ import Image                            from "next/image";
 import {
     CHAIN_LOGO,
     CHAIN_TYPE,
-    ChainTypeValue
+    WALLET_MODAL_CHAIN_TYPE,
+    WalletModalChainTypeValue
 }                                       from "../consts/chain";
 import { useWalletModalContext }        from "../context/WalletContext";
 import { EVMWalletList }                from "./EVMConnectWalletList";
@@ -26,6 +27,7 @@ export const ToggleWalletModalBtn = ({
     return selectedWalletMetadata?.isConnected && walletContext?.userData?.address ? (
         <Button
             onClick={() => {
+                walletContext.setIsLoggedIn(false);
                 walletContext.setUserData(undefined);
                 walletContext.setSelectedWalletChainType(undefined);
                 selectedWalletMetadata?.disconnect();
@@ -103,12 +105,10 @@ const LeftMenu = ({
 export const WalletModal = () => {
     const walletContext  = useWalletModalContext();
     const MenuWalletList = {
-        [CHAIN_TYPE.SOLANA]: SolanaConnectWalletDialog,
-        [CHAIN_TYPE.EVM]: EVMWalletList,
+        [WALLET_MODAL_CHAIN_TYPE.SOLANA]: SolanaConnectWalletDialog,
+        [WALLET_MODAL_CHAIN_TYPE.EVM]: EVMWalletList,
     }
     const RightMenuContent      = MenuWalletList[walletContext.walletChainType];
-    
-  console.log(walletContext.isOpen);
     
     return (
         <Modal show={walletContext.isOpen} onClose={() => walletContext.setIsOpen(false)}>
@@ -116,7 +116,7 @@ export const WalletModal = () => {
             <Modal.Body>
                 <div className="flex flex-wrap flex-col md:flex-row">
                     <LeftMenu
-                        onClick={(chain: ChainTypeValue) => {
+                        onClick={(chain: WalletModalChainTypeValue) => {
                             walletContext.setWalletChainType(chain)
                         }}
                     />
