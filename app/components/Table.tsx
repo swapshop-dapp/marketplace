@@ -75,14 +75,9 @@ export function TransactionHistoryTable(props: Props) {
       selector: "price",
     },
     {
-      name: buyerOrSeller + " Status",
+      name: "Status",
       key: "status",
-      selector: props.orderOrOffer === OrderOrOffer.OFFER ? "buyerStatus": "sellerStatus"
-    },
-    {
-      name: buyerOrSeller + " Status",
-      key: "status",
-      selector: props.orderOrOffer !== OrderOrOffer.OFFER ? "buyerStatus" : "sellerStatus"
+      selector: "status"
     },
     {
       name: "Created at",
