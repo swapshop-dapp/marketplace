@@ -2,7 +2,7 @@
 "use client";
 
 import { Button, Table, Tooltip } from "flowbite-react";
-import { OrderOrOffer, TODO } from "../consts/type";
+import { BUYER_ORDER_STATUS_TO_BTN_TEXT, OrderOrOffer, SELLER_ORDER_STATUS_TO_BTN_TEXT, TODO } from "../consts/type";
 import moment from "moment";
 import { CHAIN_LOGO, ChainTypeValue } from "../consts/chain";
 import { BaseImage } from "./BaseImage";
@@ -13,8 +13,6 @@ interface Props {
 }
 
 export function TransactionHistoryTable(props: Props) {
-  const buyerOrSeller = props.orderOrOffer === OrderOrOffer.OFFER ? "Buyer" : "Seller";
-
   const tableMetadata = [
     {
       name: "Order ID",
@@ -27,7 +25,7 @@ export function TransactionHistoryTable(props: Props) {
       selector: "productName",
     },
     {
-      name: buyerOrSeller,
+      name:  props.orderOrOffer === OrderOrOffer.OFFER ? "Buyer" : "Seller",
       key: "userName",
       selector: "userName",
     },
@@ -77,7 +75,7 @@ export function TransactionHistoryTable(props: Props) {
     {
       name: "Status",
       key: "status",
-      selector: "status"
+      selector: props.orderOrOffer === OrderOrOffer.OFFER ? "sellerStatus" : "buyerStatus"
     },
     {
       name: "Created at",
@@ -90,19 +88,40 @@ export function TransactionHistoryTable(props: Props) {
       name: "",
       key: "action",
       render: (row: TODO) => {
-        console.log(row);
-
         return (
           <Button
             color='gray'
             className="btn-goswapshop-bg-secondary font-medium text-cyan-600 hover:underline dark:text-cyan-500"
+            onClick={() => {
+                if (props.orderOrOffer === OrderOrOffer.OFFER) {
+                    buyerActionHandler(row)
+                } else {
+                    sellerActionHandler(row)
+                }
+            }}
           >
-            Edit
+            {
+               props.orderOrOffer === OrderOrOffer.OFFER ?
+                    // @ts-ignore
+                    BUYER_ORDER_STATUS_TO_BTN_TEXT[row.buyerStatus] :
+                    // @ts-ignore
+                    SELLER_ORDER_STATUS_TO_BTN_TEXT[row.sellerStatus]
+            }
           </Button>
         )
       },
     }
   ]
+
+    const buyerActionHandler = (row: TODO) => {
+        console.log('buyer', row);
+    }
+
+    const sellerActionHandler = (row: TODO) => {
+        console.log('seller', row);
+    }
+
+
   return (
     <>
       <h2 className="mb-4 text-2xl text-white">{"My " + props.orderOrOffer}</h2>

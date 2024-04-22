@@ -7,10 +7,8 @@ import {
 import Image from "next/image";
 import { ComponentProps } from 'react';
 import { ToggleWalletModalBtn } from "./WalletModal";
-import { useWalletModalContext } from "../context/WalletContext";
 
 export const Header: React.FC<ComponentProps<any>> = ({children}) => {
-    const wContext = useWalletModalContext() 
     return (
         <Navbar fluid rounded className={'mb-5'}>
             <Navbar.Brand href="/" className={'justify-center'}>
@@ -33,15 +31,6 @@ export const Header: React.FC<ComponentProps<any>> = ({children}) => {
                         <Tooltip content={'Coming soon'}>
                             <Navbar.Link href="/" className={'text-lg'} disabled={true}>Nearby</Navbar.Link>
                         </Tooltip>
-                        {
-                            wContext.isLoggedIn ? (
-                                <Navbar.Link href="/transaction-history" active className={'text-lg'}>
-                                  Transactions
-                                </Navbar.Link>
-                            ) : (
-                                <></>
-                            )
-                        }
                     </div>
 
                 <ToggleWalletModalBtn 

@@ -1,0 +1,6 @@
+[submodule "app/utils/evm-relayer-sdk"]
+	path = app/utils/evm-relayer-sdk
+	url = https://github.com/swapshop-dapp/evm-relayer-sdk
+[submodule "app/utils/solana-relayer-sdk"]
+	path = app/utils/solana-relayer-sdk
+	url = https://github.com/swapshop-dapp/solana-relayer-sdk

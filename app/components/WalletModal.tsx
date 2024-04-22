@@ -2,6 +2,7 @@
 
 import {
     Button,
+    Dropdown,
     List,
     Modal
 }                                       from "flowbite-react";
@@ -16,6 +17,7 @@ import { useWalletModalContext }        from "../context/WalletContext";
 import { EVMWalletList }                from "./EVMConnectWalletList";
 import { SolanaConnectWalletDialog }    from "./SolanaConnectWalletList";
 import { Center } from "./Center";
+import Link from "next/link";
 
 export const ToggleWalletModalBtn = ({
     className,
@@ -25,35 +27,31 @@ export const ToggleWalletModalBtn = ({
     const is0x = selectedWalletMetadata?.address?.startsWith("0x");
     
     return selectedWalletMetadata?.isConnected && walletContext?.userData?.address ? (
-        <Button
-            onClick={() => {
-                walletContext.setIsLoggedIn(false);
-                walletContext.setUserData(undefined);
-                walletContext.setSelectedWalletChainType(undefined);
-                selectedWalletMetadata?.disconnect();
-            }}
-            className={`btn-goswapshop-bg-secondary ${className}`}
-            color='gray'
-        >
-            {
-                selectedWalletMetadata?.icon ? (
-                    <Image
-                        loading="lazy"
-                        width={20}
-                        height={20}
-                        src={selectedWalletMetadata?.icon}
-                        alt={walletContext?.selectedWalletChainType || ""}
-                        className="mr-1"
-                    />
-                ) : (
-                    <></>
-                )
-            }
-            <Center>
-                Disconnect {walletContext.userData?.address?.substring(0, is0x ? 6 : 3)}...
-                {walletContext.userData?.address?.substring(walletContext.userData?.address?.length - (is0x ? 4 : 3))}
-            </Center>
-        </Button>
+        <div className={className}>
+            <Dropdown 
+                label={`${walletContext.userData?.address?.substring(0, is0x ? 6 : 3)}...${walletContext.userData?.address?.substring(walletContext.userData?.address?.length - (is0x ? 4 : 3))}`}
+                dismissOnClick={false}
+            >
+                <Dropdown.Item>
+                    <Link href={'/transaction-management'}>
+                        Transactions
+                    </Link>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                    <Link href={'/product-management'}>
+                        Products
+                    </Link>
+                </Dropdown.Item>
+                <Dropdown.Item 
+                    onClick={() => {
+                        walletContext.setIsLoggedIn(false);
+                        walletContext.setUserData(undefined);
+                        walletContext.setSelectedWalletChainType(undefined);
+                        selectedWalletMetadata?.disconnect();
+                    }}
+                >Sign out</Dropdown.Item>
+            </Dropdown>
+        </div>
     ) : (
         <Button
             className={className}
